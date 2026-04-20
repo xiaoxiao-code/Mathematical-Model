@@ -1,0 +1,2614 @@
+\documentclass[12pt]{article}
+\usepackage[UTF8]{ctex}          %中文支持（XeLaTeX编译）
+\usepackage{geometry}            % 页边距设置
+\usepackage{titlesec}            % 标题格式控制
+\usepackage{setspace}            % 行距调整
+\usepackage{amsmath, amssymb}    % 数学公式
+\usepackage{graphicx}            % 插入图片
+\usepackage{float} 
+\usepackage{caption, subcaption} % 图表标题
+\usepackage{booktabs}            % 三线表格
+\usepackage{enumitem}            % 列表格式
+\usepackage{listings}            % 代码插入
+\usepackage{xcolor}              % 颜色支持
+\usepackage{hyperref}            % 超链接
+
+% 页面与排版设置
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\onehalfspacing                  % 1.5倍行距
+\setlength{\parindent}{2em}      % 首行缩进2字符
+\setlength{\parskip}{0pt}        % 段落间无额外间距
+
+% 标题格式
+% 一级标题：一、XXX（居中，黑体小三号）
+\titleformat{\section}[block]    % block形状实现居中
+{\heiti\Large\bfseries\centering}  % 黑体、小三号、加粗、居中
+{\chinese{section}、}          % 编号：一、二、...
+{0.5em}                        % 编号与文字间距
+{}
+\titlespacing{\section}{0pt}{1.5em}{1em} % 段前1.5em，段后1em
+
+% 二级标题：1.1 XXX（楷体四号）
+\titleformat{\subsection}[hang]
+{\kaishu\large\bfseries}       % 楷体、四号、加粗
+{\thesubsection}               % 编号：1.1、1.2...
+{1em}                          % 编号与文字间距
+{}
+\titlespacing{\subsection}{0pt}{1em}{0.5em}
+
+% 三级标题：1.1.1 XXX（宋体小四号）
+\titleformat{\subsubsection}[hang]
+{\songti\normalsize\bfseries}  % 宋体、小四号、加粗
+{\thesubsubsection}            % 编号：1.1.1、1.1.2...
+{1em}                          % 编号与文字间距
+{}
+\titlespacing{\subsubsection}{0pt}{0.5em}{0.3em}
+
+% 列表格式
+\setlist[enumerate]{labelsep=0.8em, leftmargin=2em}
+\setlist[itemize]{labelsep=0.8em, leftmargin=2em}
+
+% 代码样式
+\lstset{
+	language=Python,
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{orange},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=single,                  % 保留单边框（非红色）
+	breaklines=true,
+	showstringspaces=false
+}
+
+% 重定义标题间距
+\makeatletter
+\renewcommand{\maketitle}{%
+	\begin{center}%
+		\@title\par
+	\end{center}%
+	\vspace{0.5em}
+}
+\makeatother
+
+\begin{document}
+	
+	% 设置页脚中间为大写罗马数字 I
+	\pagenumbering{Roman}
+	
+	% 顶部队伍与题号表格
+	\begin{table}[h]
+		\centering
+		\renewcommand{\arraystretch}{1.5} % 调整表格行高
+		\begin{tabular}{|c|c|}
+			\hline
+			\makebox[0.25\textwidth][c]{队伍编号} & \makebox[0.25\textwidth][c]{MC2608331} \\
+			\hline
+			\makebox[0.25\textwidth][c]{题号} & \makebox[0.25\textwidth][c]{C} \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	% 插入一整条黑色粗实线
+	\noindent\rule{\textwidth}{1pt}
+	
+	% 总标题 (宋体，小三，居中) 小三对应的字号代码为 -3
+	\begin{center}
+		\songti\zihao{-3} 中西医下的中老年人群高血脂风险评估与干预优化研究
+	\end{center}
+	
+	% 摘要标题 (宋体，四号，居中) 四号对应的字号代码为 4
+	\begin{center}
+		\songti\zihao{4} 摘要
+	\end{center}
+	
+	% 摘要正文与关键词 (宋体，小四) 小四对应的字号代码为 -4
+	{\songti\zihao{-4}
+		随着老龄化加剧，高血脂症的精准防治已成为公共卫生领域的核心课题。针对传统预警单一与干预同质化的痛点，本文旨在构建融合中医体质的多维评估与防控体系。综合运用 XGBoost-SHAP、GAM 及 NSGA-II 算法，实现了核心致病指标萃取、风险自适应客观分层与长周期动态干预方案的最优匹配。
+		
+		针对问题一，首先利用孤立森林检测模型识别出 50 例生理逻辑冲突样本，并采用随机森林多重插补算法完成特征重构与平滑处理。其次，运用 Spearman 秩相关检验与方差膨胀因子迭代消融算法，有效解耦高维特征空间的共线性冗余，初步筛选出 17 项统计独立的候选特征。随后，构建 XGBoost-SHAP 与代价敏感 LightGBM 融合模型，结合 K-Means++空间聚类算法，在双目标特征空间内最终萃取出 TC（总胆固醇）与 TG（甘油三酯）作为双效预警核心指标，其 SHAP 重要度分别为 1.54 与 1.19，Gain 增益分别达 1493.76 与 1730.81。最后，量化分析九种中医体质对高血脂发病风险的致病权重，明确痰湿质（0.0142）、阴虚质（0.0087）及气郁质（0.0076）为贡献度最高的三大核心致病体质。
+		
+		针对问题二，首先采用靶向特征剥离策略剔除理化确诊指标，引入广义加性模型（GAM）结合样本基函数，将离散二元发病标签平滑映射为连续隐性生理风险概率测度，克服了目标变量泄露，模型 Brier 评分收敛至真实的 0.1206。其次，运用核密度估计（KDE）与拓扑微积分极值寻优算法，自适应锁定概率密度分布的自然波谷，客观界定出低（p<0.75）、中（0.75$\le$p<0.97）、高（p$\ge$0.97）三级风险截断阈值，实现各风险组 333 例样本的均衡分层。详情数据见附录，最后，构建 CART 全局代理决策树提取临床显性特征分层规则，分层标签保真度达 0.5467，并结合 FP-Growth 算法精准挖掘出高危人群“低 HDL $\rightarrow$ 高 TG”的核心致病特征组合，其支持度、置信度与提升度分别高达 0.1515、0.8333 与 1.5278。
+		
+		针对问题三，首先，构建以期末痰湿积分与总干预费用双重最小化为目标的离散动态优化模型，并引入带精英保留策略的 NSGA-II 算法进行帕累托前沿寻优。随后，针对样本 ID 为 1、2、3 的同质化患者（初始积分 70.0，最高耐受度 3 级），求得非对称最优时序方案：首月实施 3 级强度每周 9 次的激进干预，后 5 个月转为 1 级强度每周 10 次的维持干预，使期末积分骤降至 40.14 分，总成本仅 1218.00 元。最后，复用 XGBoost-SHAP 框架提炼匹配规律，明确初始积分突破 60 分即触发高强度跃迁阈值，且高活动评分与低龄驱动“激进型”方案，高龄或低活动分则锁定“温和维持型”策略。
+		\vspace{0.1em}
+		
+		% 关键词
+		\noindent{\heiti 关键词：} XGBoost-SHAP 模型 \quad CART 决策树 \quad FP-Growth 算法 \quad NSGA-II 算法
+		\par}
+	\newpage
+	
+	%第二页：目录
+	% 确保页码仍为大写罗马数字，自然接续前一页为 II
+	\pagenumbering{Roman}
+	\setcounter{page}{2}
+	
+	% 目录标题 (宋体小三，加粗居中以匹配图片视觉效果)
+	\begin{center}
+		\songti\zihao{-3}\textbf{目录}
+	\end{center}
+	\vspace{0.5em}
+	
+	% 目录正文 (宋体小四，调整行距与图片保持一致)
+	{\songti\zihao{-4}
+		\renewcommand{\baselinestretch}{1.35}\selectfont % 微调行距以适应单页排版
+		
+		\noindent 一、 问题重述 \dotfill 3 \par
+		\noindent \hspace*{2em} 1.1 问题背景 \dotfill 3 \par
+		\noindent \hspace*{2em} 1.2 问题复述 \dotfill 3 \par
+		
+		\noindent 二、 问题分析 \dotfill 3 \par
+		\noindent \hspace*{2em} 2.1 问题一分析 \dotfill 3 \par
+		\noindent \hspace*{2em} 2.2 问题二分析 \dotfill 4 \par
+		\noindent \hspace*{2em} 2.3 问题三分析 \dotfill 4 \par
+		
+		\noindent 三、 模型假设 \dotfill 4 \par
+		
+		\noindent 四、 符号说明 \dotfill 4 \par
+		
+		\noindent 五、 数据预处理 \dotfill 5 \par
+		\noindent \hspace*{2em} 5.1 孤立森林无监督异常检测 \dotfill 5 \par
+		\noindent \hspace*{2em} 5.2 随机森林多重插补 \dotfill 5 \par
+		
+		\noindent 六、 问题一模型建立与求解 \dotfill 6 \par
+		\noindent \hspace*{2em} 6.1 痰湿表征与高血脂预警的特征初筛 \dotfill 6 \par
+		\noindent \hspace*{4em} 6.1.1 基于非参数秩相关的特征初筛 \dotfill 6 \par
+		\noindent \hspace*{4em} 6.1.2 基于 VIF 诊断的共线性解耦模型 \dotfill 7 \par
+		\noindent \hspace*{4em} 6.1.3 特征价值的双目标融合判定 \dotfill 7 \par
+		\noindent \hspace*{4em} 6.1.4 结果分析 \dotfill 7 \par
+		
+		\noindent \hspace*{2em} 6.2 痰湿表征的贡献度量化与筛选 \dotfill 9 \par
+		\noindent \hspace*{4em} 6.2.1 XGBoost 非线性拟合底座构建 \dotfill 9 \par
+		\noindent \hspace*{4em} 6.2.2 基于合作博弈论的 SHAP 边际归因 \dotfill 9 \par
+		\noindent \hspace*{4em} 6.2.3 痰湿体质核心特征的全局提纯 \dotfill 10 \par
+		\noindent \hspace*{4em} 6.2.4 结果分析 \dotfill 10 \par
+		
+		\noindent \hspace*{2em} 6.3 高血脂发病风险预警模型构建与验证 \dotfill 11 \par
+		\noindent \hspace*{4em} 6.3.1 LightGBM 分类底座与概率映射 \dotfill 11 \par
+		\noindent \hspace*{4em} 6.3.2 代价敏感交叉熵损失函数构建 \dotfill 12 \par
+		\noindent \hspace*{4em} 6.3.3 基于高斯过程的贝叶斯超参数寻优 \dotfill 12 \par
+		\noindent \hspace*{4em} 6.3.4 全局预警特征重要度的量化提取 \dotfill 13 \par
+		\noindent \hspace*{4em} 6.3.5 结果分析 \dotfill 13 \par
+		
+		\noindent \hspace*{2em} 6.4 痰湿表征与高血脂预警的特征筛选 \dotfill 14 \par
+		\noindent \hspace*{4em} 6.4.1 双目标特征空间构建与无量纲化 \dotfill 14 \par
+		\noindent \hspace*{4em} 6.4.2 基于轮廓系数的最佳簇数自适应寻优 \dotfill 14 \par
+		\noindent \hspace*{4em} 6.4.3 K-Means++聚类迭代与质心优化 \dotfill 15 \par
+		\noindent \hspace*{4em} 6.4.4 基于理想点距离的双效核心特征萃取 \dotfill 15 \par
+		\noindent \hspace*{4em} 6.4.5 结果分析 \dotfill 15 \par
+		
+		\noindent \hspace*{2em} 6.5 九种体质对发病风险的贡献度差异分析 \dotfill 16 \par
+		\noindent \hspace*{4em} 6.5.1 构建模型 \dotfill 16 \par
+		\noindent \hspace*{4em} 6.5.2 结果分析 \dotfill 17 \par
+		
+		\noindent 七、 问题二模型建立与求解 \dotfill 17 \par
+		\noindent \hspace*{2em} 7.1 构建高血脂症风险预警分层模型 \dotfill 17 \par
+		\noindent \hspace*{4em} 7.1.1 靶向特征剥离与基础映射空间构建 \dotfill 18 \par
+		\noindent \hspace*{4em} 7.1.2 惩罚似然目标函数的构建与模型求解 \dotfill 18 \par
+		\noindent \hspace*{4em} 7.1.3 结果分析 \dotfill 19 \par
+		
+		\noindent \hspace*{2em} 7.2 低、中、高三级风险输出 \dotfill 20 \par
+		\noindent \hspace*{4em} 7.2.1 概率密度空间的非参数重构 \dotfill 20 \par
+		\noindent \hspace*{4em} 7.2.2 拓扑波谷寻优 \dotfill 21 \par
+		\noindent \hspace*{4em} 7.2.3 三级风险区间的自适应界定 \dotfill 21 \par
+		\noindent \hspace*{4em} 7.2.4 结果分析 \dotfill 22 \par
+		
+		\noindent \hspace*{2em} 7.3 特征选取与高风险人群组合分析 \dotfill 22 \par
+		\noindent \hspace*{4em} 7.3.1 全局特征空间重构与临床逻辑对齐 \dotfill 22 \par
+		\noindent \hspace*{4em} 7.3.2 特征分层阈值提取 \dotfill 23 \par
+		\noindent \hspace*{4em} 7.3.3 高危人群特征组合挖掘 \dotfill 23 \par
+		\noindent \hspace*{4em} 7.3.4 结果分析 \dotfill 24 \par
+		
+		\noindent 八、 问题三模型建立与求解 \dotfill 24 \par
+		\noindent \hspace*{2em} 8.1 构建多目标优化模型 \dotfill 24 \par
+		\noindent \hspace*{4em} 8.1.1 决策变量与系统状态描述 \dotfill 25 \par
+		\noindent \hspace*{4em} 8.1.2 动态演化机制与状态转移方程 \dotfill 25 \par
+		\noindent \hspace*{4em} 8.1.3 多目标优化函数的构建 \dotfill 25 \par
+		\noindent \hspace*{4em} 8.1.4 系统约束条件的确定 \dotfill 26 \par
+		\noindent \hspace*{4em} 8.1.5 结果分析 \dotfill 26 \par
+		
+		\noindent \hspace*{2em} 8.2 匹配规律分析 \dotfill 27 \par
+		
+		\noindent 九、 模型优缺点与评价 \dotfill 28 \par
+		\noindent \hspace*{2em} 9.1 模型的优点 \dotfill 28 \par
+		\noindent \hspace*{2em} 9.2 模型不足 \dotfill 29 \par
+		
+		\noindent 十、 模型改进与推广 \dotfill 29 \par
+		\noindent \hspace*{2em} 10.1 模型改进 \dotfill 29 \par
+		\noindent \hspace*{2em} 10.2 模型推广 \dotfill 29 \par
+		
+		\noindent 十一、 参考文献 \dotfill 30 \par
+		\noindent 十二、 附录 \dotfill 30 \par
+	}
+	
+	\newpage
+	
+	% 从下一页（正文第一页）开始，重置页码为阿拉伯数字 1
+	\pagenumbering{arabic}
+	\setcounter{page}{1}
+	
+	\section{问题重述}
+	\subsection{问题背景}
+	{\songti\zihao{-4}
+		随着人口老龄化进程的不断加剧，中老年高血脂症的防治已成为公共卫生领域的重大挑战。然而，在实际临床与慢病管理场景中，现有的风险评估往往单一依赖血常规指标，缺乏对中医偏颇体质及日常活动能力等多维特征的综合考量，导致早期精准预警与防治干预效能不足。因此，量化中医体质评分与活动量度对高血脂发病风险的影响机制，构建科学的多维度风险预警评估及个性化干预优化模型，成为了打破现有慢病防控壁垒、实现中西医结合精细化调治的核心课题。\par}
+	
+	\subsection{问题复述}
+	{\songti\zihao{-4}
+		\textbf{问题一：}基于血常规体检与活动量表多维数据，要求运用特征降维与选择方法，提取能有效表征痰湿体质严重程度及预警高血脂发病风险的核心指标，并构建综合评价模型以量化探究九种中医体质对该疾病发病风险的贡献度差异规律。
+		
+		\textbf{问题二：}基于多维度指标特征，要求构建高血脂症的分级风险预警模型，以实现低、中、高三级发病风险的精准分类与评估，并科学界定各级风险对应的特征分层阈值选取依据。在此基础上，需进一步探究并提取痰湿体质高危人群的核心病理特征组合模式，结合数据驱动规律与医学机理，对该特征组合的内在关联性与预警结果的合理性进行合理的解释。
+		
+		\textbf{问题三：}基于“痰湿体质”确诊患者的个体特征与中医干预原则，要求在满足身体耐受度与经济预算的双重约束下，以体质积分降幅最大化及干预成本最小化为优化目标，构建多目标优化决策模型。进而，量化探究并明确异质性患者特征组合与最优干预策略之间的映射匹配规律，最终实现面向不同特征群体及特定临床个案的长期（6个月）个性化精准干预方案的科学求解与制定。\par}
+	
+	\section{问题分析}
+	\subsection{问题一分析}
+	{\songti\zihao{-4}
+		针对问题一，本问题本质上是一个融合多源异构医疗数据的双目标非线性特征提纯与博弈论归因评价问题。首先，考虑到临床生化指标与活动量表数据分布的非正态性以及多维生理变量间的强耦合特性，构建“过滤-解耦”初筛机制，运用 Spearman 秩相关系数进行单调映射关联的特征粗筛，并引入方差膨胀因子（VIF）迭代算法进行自适应的共线性特征消融。其次，为了同时满足“有效表征痰湿体质”与“预警高血脂发病风险”的非公度双重目标，分别构建两套非线性代理底座：一方面利用 XGBoost 集成树模型拟合痰湿积分，并结合 SHAP 合作博弈理论精准量化各特征对体质偏颇的边际归因重要度；另一方面，针对临床医疗小样本数据的严重类别不平衡现象，构建代价敏感 LightGBM 分类预警模型，借助贝叶斯优化高效寻优并提取高血脂维度的全局特征信息增益。随后，为打破双重评价标准间的量纲壁垒，运用 K-Means++无监督空间聚类算法，在标准化的二维双目标特征平面内自适应寻优轮廓系数，通过极小化簇质心与理想双优极值点间的欧氏距离，客观萃取出兼顾双重效能的关键指标群。最后，在确立核心指标池的基础上，进一步复用 XGBoost-SHAP 非线性归因架构，直接以高血脂症发病标签为目标函数，对九种中医体质得分特征空间进行高精度拟合与致病权重剥离，最终量化并输出各类体质分型对高血脂发病风险的绝对贡献度差异规律与层级排序结论。\par}
+		
+		\subsection{问题二分析}
+		{\songti\zihao{-4}
+		针对问题二，本问题旨在通过融合多维度特征构建高血脂症的分级风险预警模型，本质上是一个复杂的非参数概率密度估计与多维特征分类关联规则挖掘问题。首先，为了克服离散二元标签导致模型退化及“目标变量泄露”的缺陷，采用靶向特征剥离策略，并引入广义加性模型（GAM）结合样条基函数，以此突破严格线性约束，将确诊标签平滑映射为表征隐性生理发病风险的连续概率测度。其次，为实现低、中、高三级风险的客观分层，引入基于核密度估计（KDE）的拓扑寻优算法，通过捕捉概率密度分布的自然波谷作为自适应截断边界，从而避免主观设定阈值带来的认知偏差。最后，运用分类与回归树（CART）作为全局代理模型提取显性的特征分层阈值依据，并结合 FP-Growth 算法进行关联规则挖掘，以解耦高风险人群的非线性协同致病因素，最终输出白盒化的临床判定规则与核心共病特征组合。\par}
+		
+		\subsection{问题三分析}
+		{\songti\zihao{-4}
+		针对问题三，本问题旨在为“痰湿体质”确诊患者制定兼顾健康效益与经济成本的长周期干预策略，本质上属于一个典型的多目标离散动态约束优化问题。首先，考虑到阶段干预对系统状态演化存在的非线性累积影响以及多重生理耐受度红线限制，构建以期末体质积分与干预总花费双重最小化为核心的评价体系。其次，为有效处理变量离散且约束条件复杂的帕累托前沿求解，引入带精英保留策略的非支配排序遗传算法（NSGA-II）进行全局自适应寻优；随后，为了进一步探究异质性特征与决策间的深层匹配逻辑，复用 XGBoost-SHAP 架构对干预强度标签进行非线性归因分析。最后，依托所建模型与理想点法，系统输出特定临床个案在长期动态干预下的最优时序演化轨迹，并量化提炼出多维生理特征驱动下的方案自适应匹配法则。\par}
+		
+		\section{模型假设}
+		{\songti\zihao{-4}
+		\begin{enumerate}
+			\item 假设检测出的离群异常特征系随机测量误差所致，不存在系统性数据记录偏差。
+			\item 假设多维医疗特征对病理状态的非线性边际贡献严格满足博弈论可加性公理。
+			\item 假设人群向高血脂症演化的隐性生理发病风险在特征空间内连续、平滑且可微。
+			\item 假设在六个月的动态干预周期内，患者处于封闭系统，无突发重大疾病的干扰。
+			\item 假设分级活动干预对痰湿积分的逐月衰减效应是确定性的，忽略个体随机波动。
+		\end{enumerate}
+		}
+		
+
+	
+	\section{符号说明}
+	{\songti\zihao{-4}
+		\begin{table}[htbp]
+			\centering
+			\renewcommand{\arraystretch}{1.5}
+			\begin{tabular}{ccc}
+				\toprule
+				\textbf{符号} & \textbf{说明} & \textbf{单位} \\
+				\midrule
+				$\phi_i(x)$ & 合作博弈论下特征对风险预测的边际贡献值 & $-$ \\
+				$I_j$ & 多维生理特征对目标的绝对重要度指数 & $-$ \\
+				$p$ & 广义加性模型平滑的高血脂隐性发病概率 & $-$ \\
+				$\hat{f}(p)$ & 非参数核密度估计的发病风险连续概率密度 & $-$ \\
+				$VIF_i$ & 候选医疗特征的方差膨胀因子 & $-$ \\
+				$S_m$ & 第 $m$ 月初患者痰湿体质积分系统状态变量 & 分 \\
+				$x_m$ & 动态规划第 $m$ 月分级活动干预强度决策变量 & 级 \\
+				$y_m$ & 动态规划第 $m$ 月每周活动干预频率决策变量 & 次/周 \\
+				$\Delta S_m$ & 多维干预策略下患者单月痰湿体质积分非线性下降率 & $-$ \\
+				$C_{act}(x_m)$ & 特定干预强度 $x_m$ 的单次训练单位经济成本 & 元/次 \\
+				$C_{TCM}(S_m)$ & 随当月体质积分动态匹配的中医分级调理月度刚性成本 & 元/月 \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	}
+	
+	\section{数据预处理}
+	{\songti\zihao{-4}
+		由附件 1 可知，数据集共包含 1000 个样本与 37 个字段，高度集成了受检者的中医体质得分、日常生活活动能量表及西式生化血液指标等多模态医疗特征。经初步的数据分析确认，原始数据集完整，无缺失值和重复值。然而，鉴于医学数据的强多维耦合特性，即使所有指标均处于各自的单变量合理阈值内，高维空间中仍极易隐匿由生理逻辑冲突引发的结构性异常。为保证后续风险预警与分型分类模型的收敛稳定性、防止局部极端梯度扰动，同时兼顾医疗小样本数据的使用性，本小节对原始数据进行了系统性的高维无监督异常探测与靶向特征重构处理。\par}
+	
+	\subsection{孤立森林无监督异常检测}
+	{\songti\zihao{-4}
+		传统的异常值检测方法，无法捕捉本数据集中中医体质、生化指标及量表得分间错综复杂的生理联动约束。因此，引入孤立森林无监督检测模型[3]，在严格规避“样本 ID”与“目标标签”导致数据穿越的前提下，提取其余 34 维生理与量表特征构建联合特征空间。基于高维特征切分路径的期望长度来度量样本的异常程度。依据医学罕见病理组合的先验分布，设定异常污染率为 0.05，模型最终精准甄别出 50 例在多变量联合分布上严重偏离正常生理流形的离群样本行，累计有 1850 处疑似逻辑冲突的异常特征坐标。\par}
+	
+	\subsection{随机森林多重插补}
+	{\songti\zihao{-4}
+		针对孤立森林检出的 50 例异常样本，考虑到数据总样本量小，直接剔除效果不佳，容易错杀患有复杂并发症的真实罕见病例，从而削弱模型的泛化能力。为此，基于随机森林的多重插补算法进行定向修正，相关基础代码由 Doubao 辅助编写[2]。下表是检测到的异常值和处理后的部分结果，详情见佐证材料。\par}
+	
+	\begin{table}[htbp]
+		\centering
+		\songti\small
+		\caption{核心特征异常值预处理前后对比展示抽样表}
+		\renewcommand{\arraystretch}{1.3} % 稍微拉高行距使其美观
+		\begin{tabular}{|c|c|c|c|c|c|c|}
+			\hline
+			样本 ID & 数据状态 & 阳虚质得分 & 痰湿质得分 & ADL 总分 & TG & BMI \\
+			\hline
+			& 处理前 & 2 & 15 & 28 & 3.24 & 24.16 \\
+			\cline{2-7}
+			\raisebox{1.5ex}[0pt]{10} & 处理后 & 20 & 33 & 23 & 2.48 & 22.12 \\
+			\hline
+			& 处理前 & 36 & 15 & 34 & 3.04 & 23.01 \\
+			\cline{2-7}
+			\raisebox{1.5ex}[0pt]{33} & 处理后 & 20 & 28 & 24 & 2.62 & 21.57 \\
+			\hline
+			& 处理前 & 3 & 28 & 31 & 2.25 & 18.67 \\
+			\cline{2-7}
+			\raisebox{1.5ex}[0pt]{91} & 处理后 & 18 & 27 & 25 & 2.75 & 21.99 \\
+			\hline
+			& 处理前 & 27 & 21 & 15 & 3.28 & 19.85 \\
+			\cline{2-7}
+			\raisebox{1.5ex}[0pt]{119} & 处理后 & 22 & 24 & 27 & 2.76 & 22.31 \\
+			\hline
+			& 处理前 & 9 & 29 & 33 & 2.60 & 19.42 \\
+			\cline{2-7}
+			\raisebox{1.5ex}[0pt]{156} & 处理后 & 24 & 34 & 21 & 2.59 & 22.31 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	{\songti\zihao{-4}
+		由表 1 可知，经过“双森林”机制处理后，原始数据中由测量误差或极端病理突变引发的毛刺数据得到了高精度的平滑吸收。相较于处理前，重构后的特征集在标准差与极差跨度上呈现出更为稳健的分布收敛态势，消解了多维生理变量间的自相矛盾与逻辑断层。其特征一致性与结构纯净度亦得到了显著跃升，为后续模型建立与求解，提高可行性。\par}
+		
+	\section{问题一模型建立与求解}
+	\subsection{痰湿表征与高血脂预警的特征初筛}
+	{\songti\zihao{-4}
+		针对中老年健康数据集涵盖的中医体质评分、西医生化指标及行为学量表，其数据分布呈现显著的非正态性，且指标间存在强共线性与冗余性。为筛选同时满足“表征痰湿体质”与“高血脂预警”的关键指标，构建“过滤 - 解耦”的两步初筛框架。\par}
+	
+	\subsubsection{基于非参数秩相关的特征初筛}
+	{\songti\zihao{-4}
+		由于体质评分与活动量表数据多为定序数据，不满足 Pearson 相关的正态性假设，因此采用 Spearman 秩相关系数，度量各指标与“痰湿体质得分”的单调关联程度。
+		
+		首先，对原始特征矩阵 $X$ 中的特征向量 $X_j$ 与目标变量“痰湿质”得分 $Y$ 分别进行秩次转换，记第 $i$ 个样本在两变量上的秩次差值为 $d_i$。Spearman 秩相关系数 $r_s$ 的计算公式如下：
+		\begin{equation}
+			r_s = 1 - \frac{6 \sum_{i=1}^{n} d_i^2}{n(n^2 - 1)}
+		\end{equation}
+		\par}
+	
+	{\songti\zihao{-4}
+		其中，$n$ 为样本总量；$d_i$ 为样本 $i$ 在特征变量与目标变量上的秩次之差。
+		
+		为确保筛选结果的统计显著性，构造如下 $t$ 检验统计量：
+		\begin{equation}
+			t = r_s \sqrt{\frac{n-2}{1-r_s^2}}
+		\end{equation}
+		
+		在给定的显著性水平 $\alpha$ 下，若 $p < \alpha$ 且相关系数绝对值 $|r_s|$ 超过预设阈值 $\theta$，则该指标被纳入初步候选特征池 $X_{pool}$。\par}
+	
+	\subsubsection{基于 VIF 诊断的共线性解耦模型}
+	{\songti\zihao{-4}
+		在初筛获得的特征池中，医学指标间的病理关联及量表内部的逻辑包含关系会导致严重的共线性现象。为消除冗余信息对风险预警模型的干扰，引入方差膨胀因子（VIF）进行自适应消融。
+		
+		针对 $X_{pool}$ 中的每一个特征 $X_k$，将其作为因变量，其余特征作为自变量进行辅助线性回归。该特征的 $VIF_k$ 定义为：
+		\begin{equation}
+			VIF_k = \frac{1}{1 - R_k^2}
+		\end{equation}
+		
+		式中，$R_k^2$ 为辅助回归模型的决定系数，表征了特征 $X_k$ 可被其他特征线性表出的程度。并采用迭代剔除策略：计算所有特征的 $VIF$ 值，若最大值 $VIF_{\max} > 10$，则剔除该冗余特征，重复迭代直至所有特征 $VIF < 10$，得到去共线性的特征池。\par}
+	
+	\subsubsection{特征价值的双目标融合判定}
+	{\songti\zihao{-4}
+		为兼顾“痰湿表征”与“预警疾病”的双重需求，定义特征综合价值指数 $Score_i$。该指数由特征在体质维度映射的显著性与在疾病分类维度的贡献度加权构成：
+		\begin{equation}
+			Score_i = \omega_1 \cdot |r_{si}| + \omega_2 \cdot \Phi_i
+		\end{equation}
+		
+		其中，$\Phi_i$ 为特征 $i$ 在构建的高血脂二分类预警模型中的特征重要性得分；$\omega_1, \omega_2$ 为权重系数。\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		本小节采用 Python 实现的 Spearman 非参数检验与自适应 VIF 诊断模型，完成多源异构医疗特征的初筛求解，关键结果通过热力图与 VIF 迭代追踪图可直观呈现。\par}
+		
+	
+	{\songti\zihao{-4}
+		由图 1 可知。检验结果显示，各临床生化指标与日常行为量表评分同“痰湿体质”得分的秩次关联均未通过预设显著性检验，未呈现常规单调线性映射关系，印证了中医病理关联的复杂性与非线性特征。为避免遗漏潜在关联信息，模型保留全部 20 项候选特征进入后续共线性剔除流程。同时，热力图揭示活动量表总分与分项指标间存在极强正相关，为后续共线性诊断提供了明确依据。\par}
+		
+	\begin{figure}[H] 
+		\centering
+		\includegraphics[width=0.8\textwidth]{C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/Spearman 秩相关系数图.png}
+		\caption{Spearman 秩相关系数图}
+		\label{fig:spearman}
+	\end{figure}
+	
+		
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/VIF 共线性诊断与迭代消融追踪对比图.png}
+		\caption{VIF 共线性诊断与迭代消融追踪对比图}
+		\label{fig:vif}
+	\end{figure}	
+		
+	{\songti\zihao{-4}
+		由图 2 可知。初始特征池中，3 个活动量表总分变量的 VIF 值畸高，分别为 9057.40、3220.42 与 991.80，远超预设容忍阈值，呈现典型的“信息垄断”效应。通过迭代自适应剔除算法，上述 3 个高度共线性的冗余特征被精准剥离；迭代完成后，所有特征的 VIF 值均收敛至 1.01$\sim$1.03 的理想独立区间，实现了高维特征空间的正交解耦。\par}
+	
+		
+	{\songti\zihao{-4}
+		经 Spearman 关联检验与 VIF 共线性剔除双重防线处理，最终提纯得到 17 个兼具痰湿表征潜力与统计独立性的关键特征，分别为：ADL 吃饭、ADL 用厕、IADL 理财、TC（总胆固醇）、IADL 交通、ADL 洗澡、BMI、IADL 购物、空腹血糖、HDL-C（高密度脂蛋白）、ADL 步行、IADL 服药、血尿酸、LDL-C（低密度脂蛋白）、TG（甘油三酯）、ADL 穿衣、IADL 做饭。该特征池既完整保留了多源医疗数据的原始
+		病理信息，又消除了多重共线性对后续建模的干扰，为非线性特征提纯与双目标关键指标萃取奠定了基础。
+		\par}
+	
+	{\songti\zihao{-4}
+		上述初筛仅从统计层面完成特征的粗选，为进一步提纯兼具强痰湿表征性与高血脂预警能力的关键指标，接下来引入非线性模型对特征的实际贡献度进行量化分析。
+		\par}
+	
+	\subsection{痰湿表征的贡献度量化与筛选}
+	{\songti\zihao{-4}
+		在完成“过滤-解耦”双驱动的指标初筛后，候选特征池已消除线性冗余。但中医“痰湿内蕴”的病理过程存在复杂的非线性交互与阈值阶跃特性，传统线性模型难以刻画其映射关系。为此，构建“XGBoost非线性拟合+SHAP博弈论归因”联合模型，实现痰湿体质关键特征的精准提纯与边际贡献量化。
+		\par}
+	
+	\subsubsection{XGBoost非线性拟合底座构建}
+	{\songti\zihao{-4}
+		为捕捉特征间的非线性交叉作用，构建基于 CART 回归树的 XGBoost 集成模型逼近痰湿体质得分。假设模型由 $K$ 棵回归树组成，对于给定样本特征向量 $x_i$，其预测得分映射函数定义为所有树节点权重的加和：
+		\par}
+	
+	\begin{equation}
+		\hat{y}_i = \sum_{k=1}^{K} f_k(x_i)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$x_i$ 为第 $i$ 个样本解耦后的特征向量；$\hat{y}_i$ 为模型预测的痰湿体质得分；$f_k(x_i)$ 表示第 $k$ 棵决策树的预测分数映射。
+		\par}
+	
+	{\songti\zihao{-4}
+		为防止小样本医疗数据在深度分叉中产生过拟合，引入带有结构化惩罚项的正则化目标函数。在模型的第 $t$ 轮迭代中，通过二阶泰勒展开对目标函数进行局部近似优化，其核心优化方程如下：
+		\par}
+	
+	\begin{equation}
+		\mathcal{L}^{(t)} \simeq \sum_{i=1}^{n} \left[ l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i) \right] + \Omega(f_t)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$l(\cdot)$ 为评估真实得分与前一轮预测得分的均方误差损失函数；$g_i$ 与 $h_i$ 分别为损失函数的一阶与二阶偏导数梯度；$\Omega(f_t)$ 为控制树模型复杂度的正则化项，用以约束树的深度与叶子节点权重，确保模型泛化能力。
+		\par}
+	
+	\subsubsection{基于合作博弈论的 SHAP 边际归因}
+	{\songti\zihao{-4}
+		集成树模型虽能提供高精度拟合，但存在固有的“黑盒悖论”。因此引入 SHAP 模型[4]，将特征预测过程转化为“多人合作博弈”分配问题。将 $M$ 个特征视为博弈联盟 $F$ 中的参与者，依据 Shapley 值理论[4]，特征 $j$ 的边际贡献度由其在所有可能特征排列子集中的预期边际增量加权求和推导而得：
+		\par}
+	
+	\begin{equation}
+		\phi_j(x) = \sum_{S \subseteq F \setminus \{j\}} \frac{|S|! \left( |F| - |S| - 1 \right)!}{|F|!} \left[ v(S \cup \{j\}) - v(S) \right]
+	\end{equation}	
+	
+	{\songti\zihao{-4}
+		式中，$F$为全体待测医学与行为特征集合；$S$为剔除特征$j$后的任意特征组合子集；$v(S)$为仅已知子集$S$特征时的模型输出期望；$\phi_j(x)$即为特征$j$对当前样本预测结果的精确边际贡献值。
+		\par}
+	
+	{\songti\zihao{-4}
+		基于该公理化推导，XGBoost 对任意个体 $x_i$ 的复杂非线性预测值，被严密地线性解构为全体人群基线期望与各特征边际贡献之和：
+		\par}
+	
+	\begin{equation}
+		f(x_i) = \phi_0 + \sum_{j=1}^{M} \phi_j^{(i)}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$\phi_0$ 为样本全体的痰湿体质得分基线期望值；$M$ 为候选特征总数。
+		\par}
+	
+	\subsubsection{痰湿体质核心特征的全局提纯}
+	{\songti\zihao{-4}
+		单一样本的 $\phi_j^{(i)}$ 仅表征局部个体的病理影响方向。为在宏观队列层面完成关键特征的提纯筛选，对单一特征 $j$ 在所有 $n$ 个样本中的 SHAP 绝对值进行积分累加，定义其全局重要度指数 $I_j$：
+		\par}
+	
+	\begin{equation}
+		I_j = \frac{1}{n} \sum_{i=1}^{n} |\phi_j^{(i)}|
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$I_j$ 表征了特征 $j$ 引起全体样本痰湿分数波动的平均绝对力度。通过该提纯机制，模型将依据 $I_j$ 数值大小对所有候选生化指标与活动量表进行降序排列，最终剥离次要干扰项，提取出排名居前且对中医痰湿体质形成具有决定性作用的核心表征特征群。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于前述构建的 XGBoost-SHAP 非线性归因模型，本小节对共线性解耦后的 17 项多源医疗特征进行程序化求解，量化各特征对痰湿体质得分的边际贡献度，核心结果通过两张图表可直观呈现。
+		\par}
+	
+	
+	{\songti\zihao{-4}
+		由图 3 左图可知，各特征对痰湿体质得分的边际贡献呈现显著的非对称性与阈值阶跃效应：BMI、TC（总胆固醇）、LDL-C（低密度脂蛋白）、TG（甘油三酯）等核心指标的高值样本，集中分布于 SHAP 零线正向侧，且随特征数值攀升，对痰湿体质得分的正向边际效应呈非线性递增。该分布规律与中医“脾失健运、痰湿内蕴”的病理机制高度契合，即 BMI 超标与血脂代谢异常，是痰湿体质偏颇在现代代谢维度的直接表征。
+		\par}
+	
+	{\songti\zihao{-4}
+		由图 3 右图可知，以所有样本 SHAP 绝对值的均值为量化指标，17 项特征的贡献度呈现明显的阶梯分化：第一梯队为 BMI、TC、LDL-C、TG 等躯体形态与核心血脂代谢指标，占据贡献度主导地位；第二梯队由 IADL 理财、ADL 吃饭等日常活动能力指标构成，反映出生活执行能力衰退与痰湿体质的伴生关联。
+		\par}
+	{\songti\zihao{-4}
+		依据全局重要度指数的降序收敛结果，最终提纯出对痰湿体质严重程度具有决定性表征作用的前 5 项核心指标，其贡献度排序为：BMI、TC、LDL-C、TG、IADL 理财。其余 12 项指标的贡献度呈梯度下降，详见图 3 右图。
+		\par}	
+	\begin{figure}[H]
+		\centering
+		% 用两个 minipage 实现左右并排，各占 0.48 行宽，中间留一点空隙
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/痰湿体质非线性特征归因蜂群图.png"}
+		\end{minipage}
+		\hfill % 让两张图均匀分布
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/痰湿体质与核心特征全局重要度排序柱状图.png"}
+		\end{minipage}
+		\caption{痰湿体质非线性特征归因蜂群图与核心特征全局重要度排序柱状图}
+		\label{fig:shap}
+	\end{figure}
+	
+	
+	{\songti\zihao{-4}
+		上述非线性提纯完成了痰湿表征维度的关键特征筛选，后续将结合高血脂预警维度的模型评估，构建双目标导向的最终指标集合。
+		\par}
+	
+	\subsection{高血脂发病风险预警模型构建与验证}
+	{\songti\zihao{-4}
+		在完成痰湿体质表征维度的关键特征提纯后，接下来进一步构建高血脂发病风险预警模型，验证核心指标的独立预警效能，并提取特征重要性得分，为后续双目标融合判定提供量化依据。针对医疗数据类别不平衡、漏诊代价更高的临床特性，本文引入代价敏感 LightGBM 模型，并采用贝叶斯优化实现超参数自适应寻优。
+		\par}
+	
+	\subsubsection{LightGBM 分类底座与概率映射}
+	{\songti\zihao{-4}
+		LightGBM[5]采用基于直方图的决策树算法与带有深度限制的 Leaf-wise 生长策略，通过集成多棵分类回归树来拟合高血脂症的对数几率。对于给定的纯净医疗特征向量 $x_i$，其集成输出方程构建为：
+		\par}
+	
+	\begin{equation}
+		F_K(x_i) = \sum_{k=1}^{K} f_k(x_i)
+	\end{equation}
+	
+	
+	{\songti\zihao{-4}
+		式中，$K$ 为基分类树的总数；$f_k(x_i)$ 为第 $k$ 棵决策树对样本的映射输出。为实现疾病风险的二分类预警，将树模型的连续输出通过 Sigmoid 函数非线性映射至 $(0,1)$ 概率区间，得到该样本患有高血脂症的预测概率 $p_i$：
+		\par}
+	
+	\begin{equation}
+		p_i = \frac{1}{1 + e^{-F_K(x_i)}}
+	\end{equation}
+	
+	\subsubsection{代价敏感交叉熵损失函数构建}
+	{\songti\zihao{-4}
+		在标准的提升树算法中，二元交叉熵损失赋予正负样本同等权重，难以应对类不平衡挑战。为此，故引入非对称代价矩阵，赋予阳性少数类更高的截断惩罚权重。构建代价敏感损失函数 $\mathcal{L}_{CS}$ 如下：
+		\par}
+	
+	\begin{equation}
+		\mathcal{L}_{CS} = -\frac{1}{N} \sum_{i=1}^{N} \left[ \alpha \cdot C_{FN} \cdot y_i \log(p_i) + (1-\alpha) \cdot C_{FP} \cdot (1-y_i) \log(1-p_i) \right]
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$N$ 为样本总数；$y_i \in \{0,1\}$ 为真实的疾病诊断标签；$\alpha$ 为平衡少数类的先验缩放因子；$C_{FN}$ 与 $C_{FP}$ 分别代表假阴性与假阳性的惩罚标量。本文严格设定 $C_{FN} > C_{FP}$，强制梯度下降的每一次分裂均优先拟合高风险的患病特征空间。
+		\par}
+	
+	\subsubsection{基于高斯过程的贝叶斯超参数寻优}
+	{\songti\zihao{-4}
+		为避免人工调参陷入局部最优且提升高维特征空间的搜索效率，以验证集上的目标评价指标为黑盒适应度函数 $f(\theta)$，构建贝叶斯优化机制。假定目标函数在超参数空间内服从高斯过程先验：
+		\par}
+	
+	\begin{equation}
+		f(\theta) \sim \mathcal{GP}(m(\theta), \kappa(\theta, \theta'))
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$\theta$ 为包含树深、学习率等变量的特定超参数组合；$m(\theta)$ 为均值函数；$\kappa(\theta, \theta')$ 为度量参数空间相似度的协方差核函数。
+		\par}
+	
+	{\songti\zihao{-4}
+		在观测到历史评估点集 $\mathcal{D}_t$ 后，模型通过计算期望增量采集函数，决策下一个最具潜力的超参数采样点 $\theta_{t+1}$：
+		\par}
+	
+	\begin{equation}
+		\theta_{t+1} = \arg \max_{\theta \in \mathcal{H}} \mathbb{E} \left[ \max(0, f(\theta) - f(\theta^+)) \mid \mathcal{D}_t \right]
+	\end{equation}
+	
+	
+	{\songti\zihao{-4}
+		式中，$\mathcal{H}$ 为定义的超参数搜索域；$f(\theta^+)$ 为当前已观测到的最优模型得分。通过最大化该期望增量，算法在探索未知空间与利用已知高分区之间取得动态平衡，快速收敛至代价敏感 LightGBM 的全局最优参数组合。
+		\par}
+	
+	\subsubsection{全局预警特征重要度的量化提取}
+	{\songti\zihao{-4}
+		待最优疾病预警模型收敛后，统计特征 $j$ 在所有 $K$ 棵决策树中被用于分裂节点时所带来的代价敏感目标函数总增益（Gain）。以此增益总和作为该指标对高血脂症的全局预警重要性得分 $W_j$，从而量化输出高血脂发病风险的核心关联指标集合，为后续干预方案的制定提供数理依据。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于前述特征池，本小节构建代价敏感 LightGBM 高血脂预警模型，并在 Doubao 的辅助下[2]依托 Optuna 贝叶斯优化完成超参数寻优，高效完成模型性能验证与特征预警增益量化。
+		\par}
+		
+	{\songti\zihao{-4}
+		由图 4 可知，基于高斯过程期望增量的贝叶斯优化实现了高效收敛，快速锁定非平衡数据下的最优超参数组合：非平衡代价敏感权重设为 0.26，基于该参数的模型在测试集上的 ROC-AUC 得分达 0.9983，接近理想分类器性能，验证了代价敏感机制在医疗非平衡数据下的有效性，成功规避了漏诊风险。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/参数等高线投影图.png"}
+		\caption{参数等高线投影图}
+		\label{fig:optuna_contour}
+	\end{figure}
+	
+
+		
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/代价敏感LightGBM模型高血脂分类预警ROC评估曲线与核心特征Gain增益条形图.png"}
+		\caption{LightGBM模型高血脂分类预警ROC评估曲线与核心特征Gain增益条形图}
+		\label{fig:lightgbm_result}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 5 的特征信息增益分布可知，各指标对高血脂预警的贡献呈现明显的长尾分布：TG（甘油三酯）、TC（总胆固醇）的增益显著领先，血尿酸、LDL-C（低密度脂蛋白）、HDL-C（高密度脂蛋白）次之，其余活动量表及生化指标增益极低。该分布完全契合临床病理事实，同时血尿酸的次高增益，也揭示了嘌呤代谢紊乱与脂质代谢异常的微观关联。
+		\par}
+	
+	{\songti\zihao{-4}
+		结合前一阶段痰湿特征的重要度排序，本阶段的预警增益结果为后续双目标关键指标萃取提供了量化依据，完成了高血脂预警维度的特征效能验证。后续将通过双目标融合判定，筛选出同时满足双重需求的关键指标集合。
+		\par}
+	
+	\subsection{痰湿表征与高血脂预警的特征筛选}
+	{\songti\zihao{-4}
+		在完成痰湿体质表征重要度与高血脂预警重要度的量化后，本环节需解决双目标非公度评价的融合问题。由于中医病理表征与西医疾病预警的评价维度存在量纲差异，传统主观加权法易引入认知偏差，因此构建基于 K-Means++ 的双目标特征空间聚类模型，通过无监督聚类实现关键指标的客观萃取。
+		\par}
+	
+	\subsubsection{双目标特征空间构建与无量纲化}
+	{\songti\zihao{-4}
+		为消除 SHAP 重要度与 LightGBM 增益间的量纲壁垒，首先构建由候选特征组成的双目标矩阵，采用极差标准化将评估指标映射至 $[0,1]$ 的正交特征平面内。第 $j$ 个特征的二维坐标 $z_j = (x_j, y_j)$ 定义为：
+		\par}
+	
+	\begin{equation}
+		x_j = \frac{I_j - \min(I)}{\max(I) - \min(I)}, \quad y_j = \frac{W_j - \min(W)}{\max(W) - \min(W)}
+	\end{equation}
+	
+	\subsubsection{基于轮廓系数的最佳簇数自适应寻优}
+	{\songti\zihao{-4}
+		为客观确定特征在二维空间的群落结构，引入轮廓系数作为无监督评估依据，自适应确定最佳簇数 $K$。对于任意特征 $i$，其轮廓系数定义为：
+		\par}
+	
+	\begin{equation}
+		S(i) = \frac{b(i) - a(i)}{\max\{a(i), b(i)\}}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		全局轮廓系数 $\bar{S}$ 为所有特征的平均值。通过遍历 $K \in [2,6]$，求解使得目标函数 $\max_{K} \bar{S}_K$ 成立的最佳簇数 $K^*$，从而从数据内蕴结构出发确定群落规模。
+		\par}
+	
+	\subsubsection{K-Means++聚类迭代与质心优化}
+	{\songti\zihao{-4}
+		确定 $K^*$ 后，启动 K-Means++ 空间划分[6]。为最大化初始质心的空间散度，从特征集 $Z$ 中随机选取第一个点作为中心 $\mu_1$。对于后续中心，样本 $z_j$ 被选为下一个簇心的概率正比于其至已选中心的最短距离平方：
+		\par}
+	
+	\begin{equation}
+		P(z_j) = \frac{D(z_j)^2}{\sum_{z \in Z} D(z)^2}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		完成初始化后，模型依据就近原则将全体特征分配至对应簇 $C_k$，并构建极小化簇内平方误差的全局目标函数 $J$：
+		\par}
+	
+	\begin{equation}
+		J = \sum_{k=1}^{K^*} \sum_{z_j \in C_k} \| z_j - \mu_k \|_2^2
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		通过对目标函数求偏导，迭代更新各簇质心位置，直至质心漂移量趋于零：
+		\par}
+	
+	\begin{equation}
+		\mu_k^{(t+1)} = \frac{1}{|C_k^{(t)}|} \sum_{z_j \in C_k^{(t)}} z_j
+	\end{equation}
+	
+	\subsubsection{基于理想点距离的双效核心特征萃取}
+	{\songti\zihao{-4}
+		待聚类网络收敛后，提取 $K^*$ 个质心。定义二维空间中的理想双优极值点为 $P_{ideal}=(1,1)$。计算各个簇质心 $\mu_k=(\mu_{k_x},\mu_{k_y})$ 距理想点的欧氏距离：
+		\par}
+	
+	\begin{equation}
+		D_{ideal}(C_k) = \sqrt{(\mu_{k_x}-1)^2 + (\mu_{k_y}-1)^2}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		寻优判别条件设定为 $\arg\min_{k} D_{ideal}(C_k)$，即锁定质心最贴近理想状态的聚类群落 $C_{best}$。该群落内部所包含的所有医疗指标，即为严格兼顾“痰湿严重程度表征”与“高血脂风险预警”的双维终极关键特征群。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于前序步骤得到共 17 项指标的痰湿表征贡献度和高血脂预警信息增益值，详情见附录或者佐证材料，采用 K-Means++ 无监督聚类模型，完成双目标特征空间的关键指标萃取。
+		\par}
+	
+	{\songti\zihao{-4}
+		由图 6 左图可知，遍历聚类簇数 $K \in [2,6]$ 时，全局平均轮廓系数在 $K=4$ 处达到峰值，说明 17 项特征在双目标空间中存在 4 个边界清晰的病理圈层，因此自适应确定最佳簇数 $K^*=4$，有效规避了人工阈值的主观性偏差。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/自适应寻优轮廓系数曲线图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/空间聚类与萃取二维散点图.png"}
+		\end{minipage}
+		\caption{自适应寻优轮廓系数曲线与空间聚类与萃取二维散点图}
+		\label{fig:cluster_result}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		图 6 右图可知，展示了 17 项特征在双目标空间的聚类分布，四个特征簇的质心距理想双优极值点(1,1)的距离分别为：簇 0（1.09）、簇 1（0.38）、簇 2（0.20）、簇 3（1.35）。其中，簇 1 的质心距离最近，该簇内的 TC（总胆固醇）与 TG（甘油三酯）两项指标，在痰湿表征维度（SHAP 重要度分别为 1.54、1.19）与高血脂预警维度（Gain 增益分别为 1493.76、1730.81）均处于第一梯队，呈现典型的 “双高” 特征，完美契合题目对关键指标的双重要求。
+		\par}
+	
+	{\songti\zihao{-4}
+		关键指标筛选任务全部完成，最终提纯得到同时有效表征痰湿体质严重程度、且具备独立高血脂预警能力的核心指标为 TC（总胆固醇）与 TG（甘油三酯），为后续体质贡献度分析与多维度特征风险预警模型构建奠定了基础。
+		\par}
+	
+	\subsection{九种体质对发病风险的贡献度差异分析}
+	{\songti\zihao{-4}
+		在完成关键指标筛选后，本小节聚焦九种中医体质维度，构建合作博弈归因模型，量化不同体质对高血脂发病风险的贡献度差异。与前文针对 “痰湿体质得分拟合-指标重要度归因” 的建模目标不同，本模型以 “高血脂患病二分类标签” 为预测目标，输入为九种体质得分，通过复用 XGBoost-SHAP 架构解决体质间非线性交互的归因难题，避免重复建模的同时，实现体质致病权重的公平剥离。
+		\par}
+	
+	\subsubsection{构建模型}
+	{\songti\zihao{-4}
+		中医体质致病路径中存在显著的非互斥伴生网络与非线性剂量-反应阶跃效应，传统线性模型无法拟合体质间的协同交互，而常规集成树模型又存在 “黑盒归因偏移” 问题。因此，引入 XGBoost-SHAP 合作博弈归因框架，实现高精度非线性拟合与可解释性归因的统一。
+		\par}
+	
+	{\songti\zihao{-4}
+		以高血脂患病标签为目标变量，九种体质得分为输入特征，构建 XGBoost 集成树模型捕捉体质间的复杂交互与阶跃阈值效应，模型构建方式同前文 6.2 节，此处不再赘述。模型通过二阶泰勒展开优化带结构化惩罚项的目标函数，收敛至逼近真实发病风险的最优超参数空间。
+		\par}
+	
+	{\songti\zihao{-4}
+		引入 SHAP 框架，将单样本发病预测过程转化为 “九种体质合作博弈” 分配问题。根据 Shapley 值公理，体质特征对发病风险的边际贡献，由其在所有可能特征组合中的预期边际增量加权推导得到，核心原理同前文 6.2 节。模型将非线性的发病对数几率，线性分解为全体样本基线期望与九种体质边际贡献之和，严格满足局部准确性与一致性公理。
+		\par}
+		
+	
+	{\songti\zihao{-4}
+		为消除正负向 SHAP 值的相互抵消，取所有样本在某一体质上局部 SHAP 值的绝对值均值，作为衡量其全局重要程度的核心量化指标：该指标值越高，表明该体质在高血脂发病风险的提升或抑制中，占据越核心的枢纽支配地位。通过对九种体质的全局贡献度降序排列，可直观揭示不同体质对发病风险的贡献度差异。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于前述构建的 XGBoost-SHAP 合作博弈归因模型，本小节量化九种中医体质对高血脂发病风险的局部协同致病效应与全局绝对贡献度。
+		\par}
+	
+	{\songti\zihao{-4}
+		由图 7 左图可知，九种体质对发病风险的边际贡献呈现显著的方向异质性：痰湿质、阴虚质、气郁质、湿热质的高值样本集中分布于 SHAP 零线右侧，表现为发病风险的正向驱动；而平和质样本多分布于零线左侧，呈现明显的风险抑制效应。该分布完美契合中医病理逻辑，体现了体质偏颇与发病风险间的非线性映射关系。
+		\par}
+	
+	{\songti\zihao{-4}
+		图 7 右图可知，以平均绝对 SHAP 值量化各体质的全局影响强度，呈现清晰的层级分化：
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  核心危险体质：痰湿质的贡献度位居首位，确立了其高血脂发病的核心枢纽地位；
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  次要致病体质：阴虚质、气郁质、湿热质构成次级致病梯队；
+		\par}
+	
+	{\songti\zihao{-4}
+		3.  低影响体质：平和质，体现了风险抑制作用、气虚质、阳虚质贡献度依次降低；血瘀质与特禀质的贡献度趋近于 0，对发病风险无显著边际影响。
+		\par}
+		
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/九种中医体质对高血脂发病风险预测贡献度蜂群图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题一/高血脂发病风险全局重要度排序柱状图.png"}
+		\end{minipage}
+		\caption{九种中医体质对高血脂发病风险预测贡献度蜂群与高血脂发病风险全局重要度排序柱状图}
+		\label{fig:体质贡献度}
+	\end{figure}
+	
+
+	
+	{\songti\zihao{-4}
+		综上，该结果明确量化了九种体质对高血脂发病风险的贡献度差异，为后续个性化健康干预方案的优先级制定提供了直接数理依据。
+		\par}
+	
+	\section{问题二模型建立与求解}
+	\subsection{构建高血脂症风险预警分层模型}
+	{\songti\zihao{-4}
+		本小节旨在构建融合多维度特征的高血脂症风险预警分层模型。面对既有临床数据中目标变量呈现严格离散二元分布的局限性，若直接将全量特征纳入分类学习，极易引发由核心血脂指标主导的“目标变量泄露”陷阱，使模型退化为临床规则的复读机，从而丧失“未病先防”的早期预警意义。为此，本文实施“靶向特征剥离”策略，强制剔除直接确诊理化指标，并引入广义加性模型（GAM）[7]。GAM 能够突破传统广义线性模型（GLM）的严格线性约束，通过非参数平滑样条函数，自适应地刻画中医体质偏颇与日常行为量表对潜在发病风险的复杂非线性驱动机制，从而将离散的二分类疾病标签精准映射为连续的隐性生理发病风险概率测度。
+		\par}
+	
+	
+	\subsubsection{靶向特征剥离与基础映射空间构建}
+	{\songti\zihao{-4}
+		在屏蔽直接临床诊断指标后，设提取到的核心特征向量为 $X_i = (x_{i1},x_{i2},...,x_{ip})^T$，其中包含 $p$ 个预警维度。已知患者 $i$ 的真实临床诊断标签 $Y_i \in \{0,1\}$ 服从伯努利分布，定义其罹患高血脂症的潜在生理风险概率为 $p_i = P(Y_i=1|X_i)$。
+		\par}
+	
+	{\songti\zihao{-4}
+		为将概率 $p_i$ 映射至实数域 $(-\infty,+\infty)$ 以进行多维特征的加性组合，引入 Logit 联系函数，在 Deepseek 辅助下修改公式[1]，并构建广义加性模型的基础映射方程：
+		\par}
+	
+	\begin{equation}
+		g(p_i) = \ln\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \sum_{j=1}^{p} f_j(x_{ij})
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$g(\cdot)$ 为单调可微的联系函数；$\beta_0$ 为截距项，表征特定人群的基础发病风险基线；$f_j(\cdot)$ 为待估计的非参数平滑函数，用于表征第 $j$ 个特征变量对整体发病对数几率的非线性边际效应。
+		\par}
+	
+	{\songti\zihao{-4}
+		为对未知的非参数函数 $f_j(x_{ij})$ 进行有效估计，本文摒弃全局多项式拟合的震荡缺陷，采用样条基函数进行泛函空间的局部展开。对于任意给定的连续特征 $j$，将其非线性平滑函数表示为 $K$ 个基函数的线性组合形式：
+		\par}
+	
+	\begin{equation}
+		f_j(x) = \sum_{k=1}^{K} \gamma_{jk} B_{jk}(x)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$B_{jk}(x)$ 表示选定的 B-样条基础构建模块，用以保证风险曲线的局部平滑度与灵活性；$\gamma_{jk}$ 为对应的样条基函数待求权重系数；$K$ 为节点划分决定的基函数维度。
+		\par}
+	
+	\subsubsection{惩罚似然目标函数的构建与模型求解}
+	{\songti\zihao{-4}
+		若直接对上述模型进行极大似然估计，样条曲线极易穿过每一个噪声数据点，导致严重的过拟合现象。根据结构风险最小化准则，本文在极大似然目标函数中引入关于曲线“粗糙度”的正则化惩罚机制。
+		\par}
+	
+	{\songti\zihao{-4}
+		定义第 $j$ 个特征平滑曲线的粗糙度惩罚项为其二阶导数的平方积分。结合二项分布的对数似然函数，构建最终的带惩罚的最大对数似然目标函数：
+		\par}
+	
+	\begin{equation}
+		\mathcal{L}_p(\beta_0, \gamma) = \sum_{i=1}^{n} \left[ y_i \ln(p_i) + (1-y_i)\ln(1-p_i) \right] - \frac{1}{2}\sum_{j=1}^{p} \lambda_j \int \left[ f_j(x_{ij}) \right]^2 dx
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$\lambda_j \ge 0$ 为控制曲线平滑度的惩罚超参数。当 $\lambda_j \to \infty$ 时，惩罚项占据主导，平滑曲线退化为严格直线；当 $\lambda_j \to 0$ 时，模型趋近于无约束的过拟合状态。本文通过广义交叉验证（GCV）准则自适应寻优 $\lambda_j$。
+		\par}
+	
+	{\songti\zihao{-4}
+		为求解该非线性优化系统，本文对目标函数求偏导并应用惩罚迭代加权最小二乘法（PIRLS）。在每次迭代过程中，更新响应向量 $\mathbf{Z}$ 与对角权重矩阵 $\mathbf{W}$，进而求解带正则化约束的线性方程组：
+		\par}
+	
+	\begin{equation}
+		\left( \mathbf{B}^T \mathbf{W} \mathbf{B} + \mathbf{S}_\lambda \right) \gamma = \mathbf{B}^T \mathbf{W} \mathbf{Z}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$\mathbf{B}$ 为高维样条基设计矩阵；$\mathbf{S}_\lambda$ 为包含惩罚超参数 $\lambda_j$ 的块对角惩罚矩阵。经迭代收敛求得最优基系数 $\gamma^*$ 后，将其代回基础映射方程，即可输出所有样本的高精度连续生理风险概率 $p_i \in (0,1)$，为后续风险分层提供定量的决策基石。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于上述构建的引入样条函数的广义加性模型（GAM）及靶向特征剥离机制，运用 Python 对样本数据进行了程序化求解与非线性拟合。
+		\par}
+		
+	{\songti\zihao{-4}
+		由图 8 及模型的 Brier 评分测试结果可知，在模型评估维度上产生了极具学术价值的分化。未剥离核心血脂指标的“泄露组”Brier Score 异常趋近于 0，结合图 8 左侧分布可以看出，其概率输出呈现出绝对的极化现象，发生严重的“过完美预测”，模型已退化为依靠理化指标的机械判别器，彻底丧失了对潜在疾病的早期预警意义。相对而言，实施靶向特征剥离后的模型 Brier Score 升至 0.1206。观察图 8 右侧的数据分布趋势可以发现，剥离后的概率测度呈现出平滑的双峰结构以及显著的长尾交叉重叠带。这一结果在数学层面成功打破了原始二元离散标签的零方差壁垒，成功还原了中老年人群由健康状态向高血脂症演化的连续非线性生理过程，提炼出了基于患者体质禀赋的底层隐性生理风险测度。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题二/靶向特征剥离前后高血脂隐性发病风险连续概率分布核密度对比图.png"}
+		\caption{靶向特征剥离前后高血脂隐性发病风险连续概率分布核密度对比图}
+		\label{fig:gam_kde}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题二/基于 GAM 的中医体质与行为量表非线性风险驱动机制偏依赖平滑曲线图.png"}
+		\caption{基于 GAM 的中医体质与行为量表非线性风险驱动机制偏依赖平滑曲线图}
+		\label{fig:gam_pdp}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 9 可知，在屏蔽了临床确诊理化指标后，中医体质偏颇与日常活动能力对高血脂风险展现出了极具医学解释力的非线性驱动机制。其中，中医痰湿体质积分与发病风险呈显著正相关，且其边际效应并非线性恒定：当积分越过特定阈值后，对数几率风险曲线呈现出指数级陡峭上升的拐点特征。这一非线性突变完美印证了中医理论中“脾失健运、痰湿阻滞”在量变积累到一定程度后诱发血脂代谢异常的核心病理机制。此外，日常生活能力评分与发病风险呈现出显著的非线性负相关，评分极低区间的曲线斜率骤然变陡，揭示了中老年群体活动能力衰退引发机体气血津液运行不畅、进而导致脂肪代谢停滞的边界激增效应。
+		\par}
+	
+	{\songti\zihao{-4}
+		综合上述模型求解与靶向运算过程，阻断了临床标签泄露陷阱，并依托广义加性模型为附件数据中的全部样本精准计算并输出了表征发病隐患的连续风险概率，结果详情见佐证材料。为下一步采用聚类算法圈定低、中、高三级风险的确切阈值边界奠定了绝对定量的数值基础。
+		\par}
+	
+	\subsection{低、中、高三级风险输出}
+	{\songti\zihao{-4}
+		针对前文映射得到的连续隐性风险概率测度 $p \in (0,1)$，如何科学、客观地界定“低、中、高”三级风险阈值是预警体系落地的核心。若采用等间距划分或主观设定阈值，往往会忽略人群风险分布的内在集聚特征，导致预警结果失真。为此，引入核密度估计（KDE）与拓扑寻优算法，旨在完全脱离先验假设，通过挖掘风险概率在连续域上的拓扑流形形态，识别其概率密度曲线的自然波谷作为分层边界，从而实现风险等级的自适应截断。
+		\par}
+	
+	\subsubsection{概率密度空间的非参数重构}
+	
+	{\songti\zihao{-4}
+		为了探究隐性风险概率 $p$ 的宏观分布规律，首先需要将离散的概率样本点转化为连续、平滑的概率密度泛函。采用非参数核密度估计方法[8]，重构风险概率的分布函数 $\hat{f}(p)$：
+		\par}
+	
+	\begin{equation}
+		\hat{f}(p) = \frac{1}{nh} \sum_{i=1}^{n} K\left( \frac{p-p_i}{h} \right)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$n$ 为样本容量；$h$ 为平滑带宽，决定了拓扑曲面的平滑程度；$K(\cdot)$ 为高斯核函数。该方法通过在每个观测点处叠加核函数，能够有效平滑局部噪声，呈现出风险概率在不同区间内的真实集聚态势。
+		\par}
+	
+	\subsubsection{拓扑波谷寻优}
+	{\songti\zihao{-4}
+		在重构的密度曲线 $\hat{f}(p)$ 中，波峰代表了人群风险概率的集中区域，而相邻波峰之间的波谷则代表了人群密度的稀疏带，物理意义上映射了不同风险状态相互转化的临界“断层”。为锁定最优分层阈值，构建基于微积分原理的极值寻优方程，首先求解概率密度函数的一阶导数零点：
+		\par}
+	
+	\begin{equation}
+		\frac{d\hat{f}(p)}{dp} = -\frac{1}{nh^2} \sum_{i=1}^{n} K'\left( \frac{p-p_i}{h} \right) = 0
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		通过数值求解上述超越方程，可得到候选极值点集合。为进一步筛选出表征自然边界的波谷点，引入二阶导数正定性约束，确定波谷点集合 $\mathbb{V}$：
+		\par}
+	
+	\begin{equation}
+		\mathbb{V} = \left\{ p \mid \frac{d\hat{f}(p)}{dp} = 0, \frac{d^2\hat{f}(p)}{dp^2} > 0 \right\}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		在该集合中，选取的波谷点 $p_v$ 即为数据分布逻辑下的自然断裂点。
+		\par}
+	
+	\subsubsection{三级风险区间的自适应界定}
+	{\songti\zihao{-4}
+		根据波谷点集合 $\mathbb{V}$ 的拓扑结构，若存在两个显著的局部波谷 $p_{v1}$ 与 $p_{v2}$（满足 $p_{v1} < p_{v2}$），则可将全人群风险自动划分为三个互斥的闭合区间。最终的风险分层映射规则构建如下：
+		\par}
+	
+	\begin{equation}
+		R(p_i)=
+		\begin{cases}
+			\text{低风险}, & p_i \in (0,p_{v1}] \\
+			\text{中风险}, & p_i \in (p_{v1},p_{v2}] \\
+			\text{高风险}, & p_i \in (p_{v2},1)
+		\end{cases}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		上述模型通过纯粹的数据驱动机制，在微积分层面上捕捉了病理演化的自然临界点。若数据分布呈现平滑单峰特征导致波谷缺失，模型将自适应退化为基于统计学三分位数的经验截断，以确保分层体系在各类样本分布下的鲁棒性与普适性。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		本文基于已构建的基于核密度拓扑自适应寻峰与波谷截断的分层模型，对靶向特征剥离后的底层生理发病风险概率进行了高精度非参数概率密度空间重构与微积分极值寻优。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题二/连续风险概率三级分层截断全景图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.48\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题二/三级风险三维拓扑分布散点图.png"}
+		\end{minipage}
+		\caption{连续风险概率三级分层截断全景图与三级风险三维拓扑分布散点图}
+		\label{fig:risk_layer}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 10 左图可知，中老年人群高血脂发病风险在连续概率空间中呈现显著的“多峰-波谷”拓扑特征。通过微积分极值寻优，模型自动识别并锁定风险密度波谷，得到两级分层阈值：低-中风险边界为 $p=0.7471$，中-高风险边界为 $p=0.9658$，实现了无人工干预的客观风险分层。
+		\par}
+	
+	{\songti\zihao{-4}
+		图 10 右图展示了低、中、高风险人群在“痰湿体质积分-日常活动量表-发病风险概率”三维空间中的分布：低风险人群集中于痰湿积分低、活动能力高的区域；随着痰湿积分升高与活动能力下降，样本向中风险带平滑迁移；高风险人群则在高痰湿积分、低活动能力的端点区域高度聚集，完美印证了体质偏颇与不良行为对发病风险的协同非线性影响。
+		\par}
+	
+	{\songti\zihao{-4}
+		基于上述波谷截断阈值，最终将样本划分为三级风险人群，各组样本量均为 333 例，详情见佐证材料，分布均衡，为后续分层干预策略的制定提供了清晰的数理依据。
+		\par}
+	
+	\subsection{特征选取与高风险人群组合分析}
+	{\songti\zihao{-4}
+		上述构建的非参数分布模型虽具备极高的风险识别精度，但其拓扑结构具有较强的“黑盒”特性，难以直接提取临床医生可直接操作的显性判定规则。面对该核心诉求，本小节旨在将底层隐性风险概率映射为白盒化的临床预警指南。为此，首先实施全量特征空间重构，引入分类与回归树（CART）作为全局代理模型，利用其天然的准则分裂特性提取特征分层阈值；随后，针对识别出的高风险子集，引入 FP-Growth 关联规则挖掘算法，旨在解耦特征间的非线性协同效应，识别核心致病特征组合。
+		\par}
+	
+	\subsubsection{全局特征空间重构与临床逻辑对齐}
+	{\songti\zihao{-4}
+		在特征工程中，为防止“目标变量泄露”，模型靶向剥离了核心理化指标。然而，实际临床筛查必须依托理化检验作为判定金标准。因此，首先实施特征空间的逆向重构，将全量原始特征与 7.2 节产出的三级风险金标签 $Y_{label}$ 进行融合，构建显性规则提取的样本空间 $\Omega=(X_{fid},Y_{label})$。这一过程旨在使模型从“底层病理推演”转向“白盒化规则转译”，确保提取的阈值选取依据符合真实的医疗筛查逻辑。
+		\par}
+	
+	\subsubsection{特征分层阈值提取}
+	{\songti\zihao{-4}
+		选取 CART 决策树[9]作为拓扑分层结果的代理模型，通过寻找信息增益最大化的正交超平面，将高维概率边界离散化为具象的判定规则。
+		\par}
+	
+	{\songti\zihao{-4}
+		定义当前节点数据集为 $D$，其中第 $k$ 类风险等级（低、中、高）的样本占比为 $p_k$，则该节点的基尼不纯度构建如下：
+		\par}
+	
+	\begin{equation}
+		Gini(D)=1-\sum_{k=0}^{2} p_k^2
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$Gini(D)$ 衡量了当前人群风险等级分布的混乱程度。值越小，说明该节点下的人群风险属性越趋于一致。
+		\par}
+	
+	{\songti\zihao{-4}
+		模型遍历全量特征 $A$ 及其所有可能的切分阈值 $v$，将 $D$ 划分为 $D_1(a \le v)$ 与 $D_2(a > v)$ 两部分。其优化目标函数为最小化切分后的基尼指数：
+		\par}
+	
+	\begin{equation}
+		\Delta Gini(D, A) = Gini(D) - \left( \frac{|D_1|}{|D|} Gini(D_1) + \frac{|D_2|}{|D|} Gini(D_2) \right)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		通过迭代求解使得 $\Delta Gini$ 最大化的最优特征及其对应的物理阈值 $v^*$。
+		\par}
+	
+	\subsubsection{高危人群特征组合挖掘}
+	{\songti\zihao{-4}
+		为进一步识别痰湿体质高危人群中的“共病特征套餐”，引入 FP-Growth 算法[10]。相较于传统算法，该模型通过构建频繁模式树避免了海量候选项集的生成，具备更高的挖掘效率。
+		\par}
+	
+	{\songti\zihao{-4}
+		对于特征组合 $X$ 与风险事件 $Y$，定义支持度为两者共同出现的全局概率。为识别具有真实病理促进意义的特征组合，重点引入提升度作为评估指标：
+		\par}
+	
+	\begin{equation}
+		Lift(X \Rightarrow Y) = \frac{P(X \cup Y)}{P(X)P(Y)}
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		式中，$P(X \cup Y)$ 为特征 $X$ 与事件 $Y$ 的联合概率。若 $Lift > 1$，则证明特征 $X$ 与 $Y$ 之间存在非随机的正向病理关联。
+		\par}
+	
+	{\songti\zihao{-4}
+		通过对高风险子集进行关联规则扫描，能够挖掘出如“痰湿+低活动量+高血脂”等核心特征组合，为后续针对性干预方案的制定提供定量依据。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		基于 CART 代理决策树与 FP-Growth 关联规则挖掘模型，本小节完成三级风险分层的特征规则提取与高危人群共病特征组合挖掘。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题二/全局三级风险临床特征显式判定树.png"}
+		\caption{全局三级风险临床特征显式判定树}
+		\label{fig:cart_tree}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 11 的 CART 决策树可知，模型基于基尼增益最大化准则，将连续风险分层转化为可操作的特征判定规则，模型对风险分层标签的保真度为 0.5467，具有良好的临床解释性。决策树的分裂轨迹揭示了风险分层的核心特征屏障：气虚质、痰湿质、血瘀质等体质指标作为根节点，形成风险分层的第一道筛选；血脂指标（TC、TG、血尿酸）作为次级节点，进一步细化中高风险判定。高风险路径清晰划定了高危人群的特征阈值，明确了不同体质偏颇与血脂异常的组合规则，为临床风险筛查提供了量化依据。
+		\par}
+	
+	{\songti\zihao{-4}
+		痰湿体质高危人群的异常体征并非随机分布，而是呈现明确的病理耦合关联。基于 FP-Growth 关联规则挖掘，挖掘得到两条核心关联规则：
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  高 TG（甘油三酯）→低 HDL（高密度脂蛋白）：支持度 0.1515，置信度 0.2778，提升度 1.5278；
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  低 HDL→高 TG：支持度 0.1515，置信度 0.8333，提升度 1.5278。
+		\par}
+	
+	{\songti\zihao{-4}
+		其中，低 HDL→高 TG 的高置信度规则表明，在痰湿体质高危群体中，HDL 功能衰退伴随 TG 堆积的概率呈压倒性优势，完美契合“痰湿内停导致水液代谢失常，进而抑制脂质逆向转运”的病理机制。
+		\par}
+	
+	{\songti\zihao{-4}
+		综上，本部分明确了三级风险对应的临床特征判定规则，并锁定了高危人群的核心共病特征组合。
+		\par}
+	
+	\section{问题三模型建立与求解}
+	
+	\subsection{构建多目标优化模型}
+	{\songti\zihao{-4}
+		面对中老年高血脂症患者的长周期干预问题，核心问题在保障患者生理耐受度的前提下，寻求健康效益（降低痰湿积分）与经济成本（干预总费用）之间的帕累托最优平衡[12]。由于干预过程跨越6个月，且每个阶段的决策（频率与强度）会动态影响下一阶段的系统状态（体质积分），进而触发中医调理成本的分级变动，本问题本质上属于一个多目标离散动态约束优化问题。
+		\par}
+	
+	{\songti\zihao{-4}
+		为此，引入带精英保留策略的非支配排序遗传算法[11]（NSGA-II）。该算法通过模拟自然进化过程中的选择、交叉和变异机制，能够有效处理具有非线性、离散变量及复杂约束特征的决策空间，从而生成一组多样化的干预方案簇，供临床决策参考。
+		\par}
+	
+	\subsubsection{决策变量与系统状态描述}
+	{\songti\zihao{-4}
+		为了刻画6个月干预周期的动态演化过程，设定如下决策变量与状态变量：
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  决策变量：令 $x_t \in \{1,2,3\}$ 表示第 $t$ 个月的活动干预强度级别；令 $y_t \in \{1,2,...,10\}$ 表示第 $t$ 个月的每周干预频率（次/周）。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  状态变量：令 $S_t \in [0,100]$ 表示第 $t$ 个月初患者的痰湿体质积分，$S_1$ 为初始积分，$S_7$ 为6个月干预结束后的期末积分。
+		\par}
+	
+	\subsubsection{动态演化机制与状态转移方程}
+	{\songti\zihao{-4}
+		依据题目给出的干预效应规则，当每周干预频率 $y_t \ge 5$ 时，痰湿积分产生实质性下降。构建如下积分下降率函数与状态转移方程：
+		\par}
+	
+	\begin{equation}
+		r_t =
+		\begin{cases}
+			0, & y_t < 5 \\
+			x_t \times 3\% + (y_t - 5) \times 1\%, & y_t \ge 5
+		\end{cases}
+	\end{equation}
+	
+	\begin{equation}
+		S_{t+1} = S_t \times (1 - r_t)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		其中，$r_t$ 为第 $t$ 个月的预期积分下降率。公式（33）描述了痰湿积分随时间步演化的递归关系，体现了干预效应的非线性累积特征。
+		\par}
+	
+	\subsubsection{多目标优化函数的构建}
+	{\songti\zihao{-4}
+		本模型旨在同时优化健康效益指标与经济成本指标，构建如下双目标评价体系：
+		\par}
+	
+	{\songti\zihao{-4}
+		目标一：最小化期末痰湿积分（健康效益最大化）
+		\par}
+	
+	\begin{equation}
+		\min f_1 = S_7
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		目标二：最小化6个月干预总成本（经济负担最小化）
+		\par}
+	
+	\begin{equation}
+		\min f_2 = C_{total} = \sum_{t=1}^{6} \left( C_{TCM}(S_t) + 4 \cdot y_t \cdot c(x_t) \right)
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		其中：
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  $C_{TCM}(S_t)$ 为基于月初积分 $S_t$ 确定的中医调理分级成本（如附表2所示）。
+		\par}
+	
+
+	{\songti\zihao{-4}
+		1.  $C_{TCM}(S_t)$ 为基于月初积分 $S_t$ 确定的中医调理分级成本（如附表2所示）。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  $c(x_t)$ 为单位强度训练成本，$4 \cdot y_t$ 代表每月训练的总次数（按每月 4 周计）。
+		\par}
+	
+	\subsubsection{系统约束条件的确定}
+	{\songti\zihao{-4}
+		为确保干预方案的科学性与可行性，模型需满足以下生理与经济约束：
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  生理耐受度约束
+		\par}
+	
+	{\songti\zihao{-4}
+		患者所能选择的最大强度 $L_{max}$ 受年龄与初始活动评分的双重制约：
+		\par}
+	
+	\begin{equation}
+		x_t \le L_{max} = \min(L_{age}, L_{score})
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		其中，$L_{age}$ 为基于年龄组确定的强度上限，$L_{score}$ 为基于活动量表总分确定的强度上限。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  经济预算约束
+		\par}
+	
+	{\songti\zihao{-4}
+		单人 6 个月总干预成本不得超过系统预设红线：
+		\par}
+	
+	\begin{equation}
+		C_{total} \le 2000
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		3.  变量定义域约束
+		\par}
+	
+	\begin{equation}
+		x_t \in \{1,2,3\}, \quad y_t \in \{1,2,\dots,10\}, \quad t=1,\dots,6
+	\end{equation}
+	
+	{\songti\zihao{-4}
+		综上所述，构建了基于 NSGA-II 的多目标动态干预优化模型。通过在满足公式(36)-(38)约束的可行域内搜索，最终输出使公式(34)与(35)达到帕累托最优的干预序列序列 $(x_t, y_t)$。
+		\par}
+	
+	\subsubsection{结果分析}
+	{\songti\zihao{-4}
+		本文基于非支配排序遗传算法（NSGA-II）多目标动态干预优化模型，采用 python 对特定的痰湿体质患者执行了程序化求解。
+		\par}
+		
+	{\songti\zihao{-4}
+		由图 12 可知，模型在面对具有不同总成本预算和最终健康期望的多重解空间时，成功挖掘出一条收敛且分布均匀的 Pareto 前沿曲线。观察曲线上各非劣解的分布趋势可以发现，总干预成本与期末痰湿体质积分之间呈现显著的非线性负相关博弈关系。在成本较低的区间，成本的微幅增加能带来极其显著的积分断崖式下降，表现出极高的边际健康收益；而当总投入越过特定阈值后，曲线斜率急剧趋缓，表明通过持续的高强度资金与运动投入来压低极低积分的边际效用正在加速递减。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者 ID 1的 Pareto 前沿分布散点图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者 ID 2的 Pareto 前沿分布散点图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者 ID 3 的 Pareto 前沿分布散点图.png"}
+		\end{minipage}
+		\caption{患者 ID 1、2、3 的 Pareto 前沿分布散点图}
+		\label{fig:pareto_fronts}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		为了进一步揭示最优折中解的内部时序演化机制[13]，提取了基于理想点法筛选出的特定个案最优方案。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者（ID=1）的最优动态干预轨迹与成本消耗双轴时序图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者（ID=2,）的最优动态干预轨迹与成本消耗双轴时序图.png"}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[b]{0.32\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/患者（ID=3）的最优动态干预轨迹与成本消耗双轴时序图.png"}
+		\end{minipage}
+		\caption{患者（ID=1,2,3）的最优动态干预轨迹与成本消耗双轴时序图}
+		\label{fig:intervention_trajectory}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 13 可知，针对初始积分较高且生理耐受度良好的同质化患者，模型输出的最优干预轨迹呈现出高度一致的“前置强效突击——后置低耗稳态”的非对称资源配置模式。具体而言，在第 1 个月，策略精准调度了高强度（3 级）与高频率（每周 9 次）的“激进型”活动处方。尽管单月活动成本激增，但这一策略瞬间击穿了中医调理成本的底层阈值，使体质积分在极短周期内脱离高危区间。
+		\par}
+	
+	{\songti\zihao{-4}
+		随后的第 2 至 6 个月，算法敏锐捕捉到了“极低中医调理费（30 元档）”的红利区间，果断将策略切换为高频（每周 10 次）但极低强度（1 级）的“防守维持型”处方。这种跨周期的非线性动态规划，在死守 2000 元系统刚性红线的前提下，最大化榨取了系统的时间价值。
+		\par}
+	
+	{\songti\zihao{-4}
+		结合程序运算，本小节明确给出了附件样本中特定患者的最优求解数值结果：针对样本 ID 为 1、2、3 的病患，由于其关键基础医学特征（初始积分 70.0、最高耐受度 3 级）高度同质化，系统收敛至相同的最优策略路径。其核心参数表现为：推荐强度序列为[3,1,1,1,1,1]，对应的周频率序列为[9,10,10,10,10,10]。在该方案下，经过 6 个月的持续干预，患者期末痰湿积分被有效压降 至 40.14 分，6 个月累计总干预成本仅为 1218.00 元，实现了医疗降本与增效的双重帕累托最优。
+		\par}
+	
+	\subsection{匹配规律分析}
+	{\songti\zihao{-4}
+		鉴于前文问题一中，本文已详细阐述了 XGBoost-SHAP 架构在处理高维非线性特征交互及归因解释方面的卓越性能与严密性。因此，针对本问题中“提炼患者特征与最优方案匹配规律”的核心诉求，不再进行原理推演，而是直接复用该高精度白盒化解释框架进行知识发现。
+		\par}
+	
+	{\songti\zihao{-4}
+		基于 XGBoost 非线性映射与 SHAP 价值分解框架，本小节对前期生成的 272 个痰湿体质样本的最优干预强度标签进行求解。
+		\par}
+		
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/基于 SHAP 框架的全局患者特征重要性蜂窝分布图.png"}
+		\caption{基于 SHAP 框架的全局患者特征重要性蜂窝分布图}
+		\label{fig:shap_intervention}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 14 可知，各特征对最优干预方案的边际贡献呈现显著分化：活动量表总分的高值样本集中于 SHAP 零线右侧，对干预强度呈强烈正向拉动效应；而“年龄组”特征则呈严格的负向阻尼效应，高龄样本被压缩于零线左侧。模型拟合优度 $R^2=1.00$，全局基准预测值收敛于 1.0441，表明干预策略的制定并非随机分布，而是受控于生理安全底线，印证了“生理活动能力与年龄是决定干预强度的刚性约束”。临床匹配规律为：高活动评分且低龄组患者优先匹配“激进型高强度”方案；高龄或活动量表总分低下者，则被锁定于“低频温和维持型”的保护性干预序列。
+		\par}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{"C:/Users/jack/Desktop/2026年MothorCup-C题上传资料/CMC2608331附件/数据可视化图/问题三/初始痰湿积分特征的 SHAP 单变量依赖与非线性阶跃图.png"}
+		\caption{初始痰湿积分特征的 SHAP 单变量依赖与非线性阶跃图}
+		\label{fig:shap_dependence}
+	\end{figure}
+	
+	{\songti\zihao{-4}
+		由图 15 可知，初始痰湿积分对高强度干预的驱动呈现典型的“非线性阈值阶跃”特征：当积分处于 50-60 的中低风险区间时，对干预强度无显著影响；当积分突破 60 阈值时，SHAP 值迅速攀升，驱动干预策略向高强度方向跃迁。这一拐点完美契合“跨期资产配置”与“防爆舱”逻辑：对初始积分 $S_0 > 60$ 且未触发生理安全红线的高危患者，最优匹配策略为“前置高压破局策略”，即首段周期采用 2 级或 3 级强度干预，以短期剧烈运动消耗打破体质恶化僵局，收割后期成本下降的红利。
+		\par}
+	
+	\section{模型优缺点与评价}
+	\subsection{模型的优点}
+	{\songti\zihao{-4}
+		1.  非线性拟合与高可解释性的深度融合。模型引入 XGBoost 与 SHAP 合作博弈框架，并在预警阶段融合了广义加性模型（GAM），有效克服了传统机器学习算法的“黑盒”弊端。该架构不仅精准量化了多源异构医疗特征间的复杂非线性耦合关系，还成功解构了特征变量对潜在发病风险的边际效应与阈值阶跃演化规律，赋予了模型极高的临床白盒化解释力。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  自适应寻优与强鲁棒性机制保障。针对医疗小样本及临床数据严重的类别不平衡特性，构建了代价敏感 LightGBM 结合贝叶斯优化的双重视角，有效规避了假阴性漏诊风险及人工调参带来的局部最优陷阱。此外，在风险分层阶段依托核密度估计（KDE）进行拓扑波谷极值寻优，彻底摆脱了人工设定阈值的主观认知偏差，显著提升了分类边界的客观性与泛化能力。
+		\par}
+		
+	{\songti\zihao{-4}
+		3.  长周期动态多目标决策的全局寻优。在制定个性化干预方案时，采用带精英保留策略的非支配排序遗传算法（NSGA-II），成功解耦了健康效益与经济负担的双目标博弈。模型在满足多重离散生理耐受度红线约束下，实现了跨周期动态策略的帕累托最优配置。
+		\par}
+	
+	\subsection{模型不足}
+	{\songti\zihao{-4}
+		1.  状态转移机制的确定性假设存在局限。在长期干预优化的动态规划求解中，受限于模型复杂度，本文对体质积分受干预强度的逐月衰减效应进行了理想化的确定性评估，未充分考量真实医疗环境中患者机体波动的随机性与依从性衰减。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  高维特征博弈论归因对算力资源要求较高。SHAP 模型在进行全量样本的非线性边际贡献度剥离时，本质上涉及特征联盟子集的指数级组合运算。随着未来多模态医疗特征的持续扩展，计算时间复杂度将急剧攀升。
+		\par}
+	
+	\section{模型改进与推广}
+	\subsection{模型改进}
+	{\songti\zihao{-4}
+		基于上述两个模型不足，引出以下两个改进
+		\par}
+	
+	{\songti\zihao{-4}
+		1.  可引入马尔可夫决策过程（MDP）进行时序建模，或结合具有遗忘门机制的长短期记忆网络（LSTM），在状态转移方程中注入服从特定分布的随机扰动项，以增强模型对时序动态演化不确定性的刻画精度。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  引入TreeSHAP等专为树模型优化的多项式级近似推演算法，或在预处理阶段增加主成分分析（PCA）等流形降维操作，在不牺牲核心解释精度的前提下，大幅压缩高维矩阵的运算开销。
+		\par}
+	
+	\subsection{模型推广}
+	{\songti\zihao{-4}
+		1.  工业物联网设备预测性维护：广义加性模型（GAM）与KDE波谷自适应截断算法可完美迁移至高端制造业。通过对多源传感器时序数据进行非线性映射，自适应捕捉设备健康度衰退的拓扑临界“波谷”，从而实现核心部件疲劳失效的早期精准预警与分级维护响应，避免“一刀切”式维修造成的产能浪费。
+		\par}
+	
+	{\songti\zihao{-4}
+		2.  金融风控反欺诈与动态信贷评估：代价敏感分类器与多目标动态优化的组合，在金融反欺诈领域具有广阔前景。在应对极端不平衡的信用卡欺诈样本时，代价敏感矩阵能有效提升拦截率、压降坏账损失；而在长周期信贷额度干预场景下，NSGA-II算法能够在死守资本充足率约束的同时，寻求“违约风险底线”与“客户生命周期价值（LTV）”双极化目标的帕累托最优动态放款策略。
+		\par}
+	
+	\section{参考文献}
+	\begin{enumerate}[label={[\arabic*]}]
+		\item DeepSeek, DeepSeek-R1-0528, 深度求索, 2026-04-17
+		\item Doubao, Doubao-4, 北京字节跳动网络技术有限公司, 2026-04-17
+		\item Liu F T, Ting K M, Zhou Z H, Isolation forest, 2008 Eighth IEEE International Conference on Data Mining: 413-422, 2008.
+		\item Lundberg S M, Lee S I, A unified approach to interpreting model predictions, Advances in Neural Information Processing Systems: 4765-4774, 2017.
+		\item Ke G, Meng Q, Finley T, et al., LightGBM: A highly efficient gradient boosting decision tree, Advances in Neural Information Processing Systems: 3146-3154, 2017.
+		\item Arthur D, Vassilvitskii S, k-means++: The advantages of careful seeding, Proceedings of the Eighteenth Annual ACM-SIAM Symposium on Discrete Algorithms: 1027-1035, 2007.
+		\item Hastie T, Tibshirani R, Generalized additive models, Statistical science, 1(3): 297-310, 1986.
+		\item Parzen E, On estimation of a probability density function and mode, The annals of mathematical statistics, 33(3): 1065-1076, 1962.
+		\item Breiman L, Friedman J, Olshen R, et al., Classification and regression trees, Belmont: Wadsworth, 1984.
+		\item Han J, Pei J, Yin Y, Mining frequent patterns without candidate generation, ACM SIGMOD Record, 29(2): 1-12, 2000.
+		\item Deb K, Pratap A, Agarwal S, et al., A fast and elitist multiobjective genetic algorithm: NSGA-II, IEEE transactions on evolutionary computation, 6(2): 182-197, 2002.
+		\item Marler R T, Arora J S, Survey of multi-objective optimization methods for engineering, Structural and multidisciplinary optimization, 26(6): 369-395, 2004.
+		\item Hwang C L, Yoon K, Multiple attribute decision making: methods and applications a state-of-the-art survey, Berlin: Springer-Verlag, 1981.
+	\end{enumerate}	
+
+\section{附录}
+\subsection{附录1：核心代码}
+\songti\small
+以下是求解模型的Python核心代码，部分代码借助了AI提供思路与框架辅助完成（完整代码见附件）： 
+\subsubsection{数据预处理} 
+\begin{lstlisting}[caption={孤立森林异常值检测}, label={code:isolation_forest_outlier}]
+	import pandas as pd
+	import numpy as np
+	import os
+	import matplotlib.pyplot as plt
+	from sklearn.ensemble import IsolationForest
+	
+	plt.rcParams['font.sans-serif'] = ['SimHei']
+	plt.rcParams['axes.unicode_minus'] = False
+	
+	def isolation_forest_outlier_detection(file_path):
+	"""
+	使用多变量类型处理 (孤立森林) 检测高维异常值，并将异常整行高亮标橘色导出。
+	"""
+	# 读取数据
+	try:
+	df = pd.read_excel(file_path)
+	print(f"当前数据规模：{df.shape[0]} 行, {df.shape[1]} 列")
+	except Exception as e:
+	print(f"请检查路径或文件是否被占用。错误信息：{e}")
+	return
+	
+	# 选取用于检测的特征列
+	# 不能将 '样本ID' 或 '目标标签' 丢入无监督异常检测，否则会产生严重的数据干扰与穿越。
+	exclude_cols = ['样本ID', '高血脂症二分类标签', '血脂异常分型标签（确诊病例）']
+	feature_cols = [col for col in df.columns if col not in exclude_cols]
+	print(f"剔除标签与ID后，实际参与联合异常检测的特征数：{len(feature_cols)} 个")
+	
+	# 构建与训练孤立森林模型
+	# 参数说明：
+	# - n_estimators=100：构建 100 棵孤立树
+	# - contamination=0.05：预期异常值比例，通常医学数据中的严重离群点在 1%~5% 之间，此处设为 5%
+	# - random_state=42：固定随机种子，确保论文复现时结果绝对一致
+	iso_forest = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
+	
+	# 拟合数据并预测
+	# 预测结果中，1 代表正常值，-1 代表异常点
+	preds = iso_forest.fit_predict(df[feature_cols])
+	
+	# 统计异常值
+	outlier_mask = (preds == -1)
+	outlier_count = outlier_mask.sum()
+	total_count = len(df)
+	outlier_pct = (outlier_count / total_count) * 100
+	
+	print("\n异常值检测结果")
+	print(f"发现全局多变量异常值：{outlier_count} 行")
+	print(f"异常值在总样本量中的占比：{outlier_pct:.2f}%")
+	
+	if outlier_count == 0:
+	print("未检测到任何异常数据，无需导出清洗报告")
+	return
+	
+	# Excel 脏数据高亮渲染规则
+	def apply_row_styles(data):
+	"""
+	根据孤立森林预测的掩码，将被判定为异常值的“整行数据”背景色高亮为深橘色。
+	"""
+	# 初始化空样式表
+	styles = pd.DataFrame('', index=data.index, columns=data.columns)
+	# 将异常点对应行的所有列样式置为深橘色
+	styles.loc[outlier_mask, :] = 'background-color: darkorange; color: white;'
+	return styles
+	
+	# 应用样式
+	styled_df = df.style.apply(apply_row_styles, axis=None)
+	
+	# 构造导出路径
+	dir_name = os.path.dirname(file_path)
+	base_name = os.path.basename(file_path)
+	file_name, _ = os.path.splitext(base_name)
+	export_path = os.path.join(dir_name, f"{file_name}_多变量检查异常值.xlsx")
+	
+	# 导出高亮 Excel
+	try:
+	styled_df.to_excel(export_path, index=False, engine='openpyxl')
+	print(f"已保存至：\n{export_path}")
+	except PermissionError:
+	print(f"目标文件被占用，请关闭已打开的 {file_name}_多变量检查异常值.xlsx 后重试。")
+	
+	if __name__ == '__main__':
+	# 您指定的绝对路径
+	TARGET_FILE_PATH = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据.xlsx"
+	isolation_forest_outlier_detection(TARGET_FILE_PATH)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={随机森林多重插补异常值处理}, label={code:missforest_impute}]
+	import pandas as pd
+	import numpy as np
+	import os
+	import openpyxl
+	from openpyxl.styles import PatternFill
+	from sklearn.experimental import enable_iterative_imputer
+	from sklearn.impute import IterativeImputer
+	from sklearn.ensemble import RandomForestRegressor
+	
+	
+	def targeted_missforest_imputation_fixed(file_path):
+	df_original = pd.read_excel(file_path)
+	df_working = df_original.copy()  # 用于计算的工作副本
+	
+	# 用 openpyxl 记录颜色坐标
+	try:
+	wb = openpyxl.load_workbook(file_path)
+	ws = wb.active
+	except Exception as e:
+	print(f"读取文件失败: {e}")
+	return
+	
+	# 确定受保护列
+	protected_cols = ['样本ID', '高血脂症二分类标签', '血脂异常分型标签（确诊病例）']
+	protected_indices = [df_original.columns.get_loc(col) for col in protected_cols if col in df_original.columns]
+	
+	# 定义样式
+	fixed_fill = PatternFill(start_color='90EE90', end_color='90EE90', fill_type='solid')  # 修复成功：浅绿
+	clear_fill = PatternFill(fill_type=None)  # 清除颜色：无色
+	
+	# 寻找所有带背景色的单元格
+	outlier_coords = []
+	for r_idx, row in enumerate(ws.iter_rows(min_row=2), start=0):
+	for c_idx, cell in enumerate(row):
+	fill = cell.fill
+	if fill and fill.start_color and fill.start_color.rgb:
+	color_hex = str(fill.start_color.rgb)
+	# 识别非白底填充
+	if color_hex not in ['00000000', 'FFFFFFFF', 'System Window']:
+	outlier_coords.append((r_idx, c_idx))
+	
+	if not outlier_coords:
+	print(" 未检测到任何异常颜色标记，无需处理。")
+	return
+	
+	# 在工作副本中将异常生理指标标记为 NaN
+	actual_impute_count = 0
+	for r, c in outlier_coords:
+	if c not in protected_indices:
+	df_working.iat[r, c] = np.nan
+	actual_impute_count += 1
+	
+	# 随机森林多重插补计算
+	imputer = IterativeImputer(
+	estimator=RandomForestRegressor(n_estimators=50, random_state=42),
+	max_iter=10,
+	random_state=42
+	)
+	# 计算完成后，df_imputed 包含了修正后的新值和原来的 ID/标签
+	df_imputed = pd.DataFrame(imputer.fit_transform(df_working), columns=df_working.columns)
+	
+	# 精准写回值与格式还原
+	for r, c in outlier_coords:
+	excel_row = r + 2
+	excel_col = c + 1
+	
+	# 获取列名以便判断类型
+	col_name = df_original.columns[c]
+	
+	if c in protected_indices:
+	original_val = df_original.iat[r, c]
+	# 确保 ID 和 标签 保持为整数格式
+	ws.cell(row=excel_row, column=excel_col).value = int(original_val)
+	ws.cell(row=excel_row, column=excel_col).fill = clear_fill
+	else:
+	# 生理指标列，写入修正后的插补值，并标记为浅绿
+	imputed_val = df_imputed.iat[r, c]
+	# 保持生化指标的浮点精度
+	ws.cell(row=excel_row, column=excel_col).value = imputed_val
+	ws.cell(row=excel_row, column=excel_col).fill = fixed_fill
+	
+	# 导出结果
+	dir_name = os.path.dirname(file_path)
+	base_name = os.path.basename(file_path)
+	file_name, _ = os.path.splitext(base_name)
+	export_path = os.path.join(dir_name, f"{file_name}_异常值处理.xlsx")
+	
+	try:
+	wb.save(export_path)
+	print(f"原始检测到异常坐标：{len(outlier_coords)} 处")
+	print(f"随机森林多重插补")
+	print(f"已保存至：\n{export_path}")
+	except PermissionError:
+	print(f"导出失败：请关闭已打开的 Excel 文件后重试。")
+	
+	if __name__ == '__main__':
+	# 路径
+	TARGET_FILE_PATH = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_多变量检查异常值.xlsx"
+	targeted_missforest_imputation_fixed(TARGET_FILE_PATH)
+\end{lstlisting}
+
+\subsubsection{问题一} 
+\begin{lstlisting}[caption={Spearman相关性检验+VIF多重共线性诊断特征筛选}, label={code:feature_selection_vif}]
+	import pandas as pd
+	import numpy as np
+	import scipy.stats as stats
+	import statsmodels.api as sm
+	from statsmodels.stats.outliers_influence import variance_inflation_factor
+	import matplotlib.pyplot as plt
+	import seaborn as sns
+	
+	def calculate_vif(X_df):
+	# 构建辅助线性回归方程
+	X_with_const = sm.add_constant(X_df)
+	vif_data = pd.DataFrame()
+	vif_data["特征"] = X_df.columns
+	vif_list = []
+	for i in range(1, X_with_const.shape[1]):
+	# 捕捉共线性导致的除零异常
+	try:
+	vif_val = variance_inflation_factor(X_with_const.values, i)
+	except RuntimeWarning:
+	vif_val = 500
+	vif_list.append(vif_val)
+	vif_data["VIF"] = vif_list
+	return vif_data
+	
+	
+	if __name__ == '__main__':
+	data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	df = pd.read_excel(data_path)
+	
+	# 定义目标变量痰湿质与候选特征集
+	target_col = '痰湿质'
+	candidate_cols = [
+	'ADL用厕', 'ADL吃饭', 'ADL步行', 'ADL穿衣', 'ADL洗澡', 'ADL总分',
+	'IADL购物', 'IADL做饭', 'IADL理财', 'IADL交通', 'IADL服药', 'IADL总分',
+	'活动量表总分（ADL总分+IADL总分）', 'HDL-C（高密度脂蛋白）',
+	'LDL-C（低密度脂蛋白）', 'TG（甘油三酯）', 'TC（总胆固醇）',
+	'空腹血糖', '血尿酸', 'BMI'
+	]
+	
+	alpha = 0.05
+	theta = 0.15
+	
+	# 基于秩映射的非参数相关性测度
+	x_pool = []
+	correlations = []
+	for col in candidate_cols:
+	r_s, p_val = stats.spearmanr(df[col], df[target_col])
+	correlations.append({'col': col, 'r_s': r_s, 'p_val': p_val, 'abs_r_s': abs(r_s)})
+	if p_val < alpha and abs(r_s) >= theta:
+	x_pool.append(col)
+	
+	print(f"通过 Spearman 检验的候选池 X_pool 包含 {len(x_pool)} 个特征。")
+	
+	# 自适应降级机制
+	if len(x_pool) < 5:
+	print("保留全部相关性排名的指标进入候选池")
+	correlations.sort(key=lambda x: x['abs_r_s'], reverse=True)
+	# 提取全部候选集指标
+	x_pool = [item['col'] for item in correlations]
+	print(f"当前 X_pool 包含 {len(x_pool)} 个特征。")
+	
+	# 提取特征候选池矩阵供绘图与后续计算
+	df_pool = df[x_pool]
+	
+	# 多源特征 VIF 诊断与自适应迭代消融
+	tau = 10.0
+	current_features = x_pool.copy()
+	
+	initial_vif_df = calculate_vif(df[current_features])
+	initial_vif_df['VIF'] = initial_vif_df['VIF'].replace(np.inf, 5000)
+	initial_vif_dict = dict(zip(initial_vif_df['特征'], initial_vif_df['VIF']))
+	
+	iteration_count = 1
+	while True:
+	vif_df = calculate_vif(df[current_features])
+	vif_df['VIF'] = vif_df['VIF'].replace(np.inf, 5000)
+	
+	# 定位 arg max
+	max_vif_idx = vif_df['VIF'].idxmax()
+	max_vif_val = vif_df.loc[max_vif_idx, 'VIF']
+	max_vif_feature = vif_df.loc[max_vif_idx, '特征']
+	
+	if max_vif_val > tau:
+	# 从 X_pool 中降维剔除
+	current_features.remove(max_vif_feature)
+	print(f"迭代 {iteration_count}: 剔除冗余特征 [{max_vif_feature}], 对应 VIF = {max_vif_val:.2f}")
+	iteration_count += 1
+	else:
+	break
+	
+	# 记录最终保留特征的 VIF
+	final_vif_df = calculate_vif(df[current_features])
+	final_vif_dict = dict(zip(final_vif_df['特征'], final_vif_df['VIF']))
+	
+	# 打印结果
+	print(f"经过 Spearman + VIF 双重防线解耦，最终提纯的关键特征共 {len(current_features)} 个：")
+	for feat in current_features:
+	print(f" - {feat} (最终稳定VIF: {final_vif_dict[feat]:.2f})")
+\end{lstlisting}
+
+\begin{lstlisting}[caption={XGBoost-SHAP特征重要度}, label={code:xgb_shap}]
+	import pandas as pd
+	import numpy as np
+	import xgboost as xgb
+	import shap
+	import matplotlib.pyplot as plt
+	
+	if __name__ == '__main__':
+	data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	df = pd.read_excel(data_path)
+	
+	# 设定目标变量和提纯出的17项关键特征
+	target_col = '痰湿质'
+	selected_features = [
+	'ADL吃饭', 'ADL用厕', 'IADL理财', 'TC（总胆固醇）', 'IADL交通',
+	'ADL洗澡', 'BMI', 'IADL购物', '空腹血糖', 'HDL-C（高密度脂蛋白）',
+	'ADL步行', 'IADL服药', '血尿酸', 'LDL-C（低密度脂蛋白）',
+	'TG（甘油三酯）', 'ADL穿衣', 'IADL做饭'
+	]
+	
+	# 提取特征矩阵与目标变量
+	X = df[selected_features]
+	y = df[target_col]
+	
+	# 构建 XGBoost 集成树模型逼近痰湿体质得分
+	# 设定均方误差与正则化约束，对应结构化风险目标函数
+	model = xgb.XGBRegressor(
+	max_depth=5,
+	learning_rate=0.05,
+	n_estimators=200,
+	objective='reg:squarederror',
+	random_state=42
+	)
+	
+	# 通过二阶泰勒展开式局部近似优化并完成模型拟合
+	model.fit(X, y)
+	
+	# 引入 TreeExplainer 进行 SHAP 博弈论归因解析
+	explainer = shap.TreeExplainer(model)
+	
+	# 将模型复杂预测值线性解构为基线期望与各特征边际贡献之和
+	shap_values = explainer.shap_values(X)
+	
+	# 对特征在所有样本中的 SHAP 绝对值求平均，计算全局重要度指数
+	global_importance = np.abs(shap_values).mean(axis=0)
+	
+	# 将全局重要度与特征名打包并降序排列
+	importance_df = pd.DataFrame({
+		'特征名称': selected_features,
+		'全局重要度(I_j)': global_importance
+	}).sort_values(by='全局重要度(I_j)', ascending=False).reset_index(drop=True)
+	
+	# 打印结果
+	for index, row in importance_df.iterrows():
+	print(f"第 {index + 1} 名: {row['特征名称']} (贡献度 I_j = {row['全局重要度(I_j)']:.4f})")
+\end{lstlisting}
+
+\begin{lstlisting}[caption={LightGBM-Optuna贝叶斯优化高血脂症诊断模型}, label={code:lgb_optuna_hyperlipidemia}]
+	import pandas as pd
+	import numpy as np
+	import lightgbm as lgb
+	import optuna
+	from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+	from sklearn.metrics import roc_curve, auc
+	import matplotlib.pyplot as plt
+	from optuna.visualization.matplotlib import plot_optimization_history, plot_contour
+	
+	if __name__ == '__main__':
+	# 读取数据
+	data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	df = pd.read_excel(data_path)
+	
+	# 设定二分类标签与17项关键特征
+	target_col = '高血脂症二分类标签'
+	selected_features = [
+	'ADL吃饭', 'ADL用厕', 'IADL理财', 'TC（总胆固醇）', 'IADL交通',
+	'ADL洗澡', 'BMI', 'IADL购物', '空腹血糖', 'HDL-C（高密度脂蛋白）',
+	'ADL步行', 'IADL服药', '血尿酸', 'LDL-C（低密度脂蛋白）',
+	'TG（甘油三酯）', 'ADL穿衣', 'IADL做饭'
+	]
+	
+	# 构建特征矩阵 X 与标签向量 y
+	X = df[selected_features]
+	y = df[target_col]
+	
+	# 按 8:2 划分训练集与测试集保障泛化性能评估
+	X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+	
+	# 动态计算代价敏感交叉熵惩罚权重
+	pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
+	
+	# 构建贝叶斯寻优目标函数
+	def objective(trial):
+	params = {
+		'objective': 'binary',
+		'metric': 'auc',
+		'boosting_type': 'gbdt',
+		'scale_pos_weight': pos_weight,
+		'num_leaves': trial.suggest_int('num_leaves', 15, 63),
+		'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.2, log=True),
+		'feature_fraction': trial.suggest_float('feature_fraction', 0.6, 1.0),
+		'verbose': -1,
+		'random_state': 42
+	}
+	
+	# 构建 LightGBM 基分类器
+	model = lgb.LGBMClassifier(**params)
+	
+	# 使用 5 折分层交叉验证评估 AUC 增量
+	cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+	scores = cross_val_score(model, X_train, y_train, cv=cv, scoring='roc_auc', n_jobs=-1)
+	
+	return scores.mean()
+	
+	# 实例化 Optuna 寻优研究对象寻求 AUC 最大化
+	study = optuna.create_study(direction='maximize')
+	study.optimize(objective, n_trials=100)
+	
+	# 提取最优参数组合训练最终诊断模型
+	best_params = study.best_params
+	best_params['objective'] = 'binary'
+	best_params['scale_pos_weight'] = pos_weight
+	best_params['random_state'] = 42
+	best_params['verbose'] = -1
+	
+	final_model = lgb.LGBMClassifier(**best_params)
+	final_model.fit(X_train, y_train)
+	
+	# 计算测试集的预测概率与 ROC 曲线坐标
+	y_pred_prob = final_model.predict_proba(X_test)[:, 1]
+	fpr, tpr, thresholds = roc_curve(y_test, y_pred_prob)
+	roc_auc = auc(fpr, tpr)
+	
+	# 提取全局预警增益 Gain 特征重要度
+	feature_importances = final_model.booster_.feature_importance(importance_type='gain')
+	imp_df = pd.DataFrame({'特征': X.columns, 'Gain重要度': feature_importances})
+	imp_df = imp_df.sort_values(by='Gain重要度', ascending=True)
+	
+	
+	# 打印结果
+	print(f"非平衡数据权重: {pos_weight:.2f}")
+	print(f"贝叶斯寻优最佳参数组合: {study.best_params}")
+	print(f"测试集 ROC-AUC 验证得分: {roc_auc:.4f}")
+	print("\n依据 Gain 增益的高血脂预警核心指标全部排名：")
+	all_features = imp_df.iloc[::-1]
+	for rank, (idx, row) in enumerate(all_features.iterrows(), 1):
+	print(f" 第 {rank} 名: {row['特征']} (信息增益: {row['Gain重要度']:.2f})")
+\end{lstlisting}
+
+\begin{lstlisting}[caption={K-Means++双维度特征聚类筛选}, label={code:kmeans_feature_clustering}]
+	import pandas as pd
+	import numpy as np
+	from sklearn.cluster import KMeans
+	from sklearn.metrics import silhouette_score
+	import matplotlib.pyplot as plt
+	import matplotlib.patches as patches
+	
+	if __name__ == '__main__':
+	data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	df_raw = pd.read_excel(data_path)
+	
+	# 构建 17 维特征双目标评估矩阵
+	metrics_data = {
+		'BMI': {'SHAP': 1.9042, 'Gain': 8.21},
+		'TC（总胆固醇）': {'SHAP': 1.5400, 'Gain': 1493.76},
+		'LDL-C（低密度脂蛋白）': {'SHAP': 1.4181, 'Gain': 60.93},
+		'TG（甘油三酯）': {'SHAP': 1.1943, 'Gain': 1730.81},
+		'IADL理财': {'SHAP': 1.1838, 'Gain': 3.45},
+		'HDL-C（高密度脂蛋白）': {'SHAP': 1.1712, 'Gain': 50.81},
+		'ADL吃饭': {'SHAP': 1.0911, 'Gain': 6.38},
+		'血尿酸': {'SHAP': 1.0706, 'Gain': 315.61},
+		'空腹血糖': {'SHAP': 0.9891, 'Gain': 7.51},
+		'ADL用厕': {'SHAP': 0.7696, 'Gain': 2.31},
+		'IADL做饭': {'SHAP': 0.7005, 'Gain': 1.64},
+		'IADL交通': {'SHAP': 0.6153, 'Gain': 0.91},
+		'ADL穿衣': {'SHAP': 0.6010, 'Gain': 3.98},
+		'IADL购物': {'SHAP': 0.5683, 'Gain': 2.49},
+		'IADL服药': {'SHAP': 0.5263, 'Gain': 1.88},
+		'ADL洗澡': {'SHAP': 0.5045, 'Gain': 1.39},
+		'ADL步行': {'SHAP': 0.4530, 'Gain': 2.56}
+	}
+	
+	df_metrics = pd.DataFrame.from_dict(metrics_data, orient='index')
+	
+	# 双维特征空间映射与无量纲化
+	I_min, I_max = df_metrics['SHAP'].min(), df_metrics['SHAP'].max()
+	W_min, W_max = df_metrics['Gain'].min(), df_metrics['Gain'].max()
+	
+	df_metrics['x'] = (df_metrics['SHAP'] - I_min) / (I_max - I_min)
+	df_metrics['y'] = (df_metrics['Gain'] - W_min) / (W_max - W_min)
+	
+	X_matrix = df_metrics[['x', 'y']].values
+	
+	# 遍历 K 值计算轮廓系数
+	K_range = range(2, 7)
+	silhouette_scores = []
+	
+	for k in K_range:
+	kmeans_temp = KMeans(n_clusters=k, init='k-means++', max_iter=300, random_state=42)
+	labels_temp = kmeans_temp.fit_predict(X_matrix)
+	score = silhouette_score(X_matrix, labels_temp)
+	silhouette_scores.append(score)
+	
+	best_k = K_range[np.argmax(silhouette_scores)]
+	
+	# 执行最优参数下的 K-Means++ 迭代更新
+	kmeans_final = KMeans(n_clusters=best_k, init='k-means++', max_iter=300, random_state=42)
+	df_metrics['cluster'] = kmeans_final.fit_predict(X_matrix)
+	cluster_centers = kmeans_final.cluster_centers_
+	
+	# 计算各簇质心距空间理想点的欧氏距离
+	distances_to_ideal = [np.sqrt((cx - 1.0) ** 2 + (cy - 1.0) ** 2) for cx, cy in cluster_centers]
+	best_cluster_idx = np.argmin(distances_to_ideal)
+	
+	# 提取隶属于理想簇的终极关键指标群
+	final_key_features = df_metrics[df_metrics['cluster'] == best_cluster_idx].index.tolist()
+	
+	# 求解结果
+	print(f"自适应确定最佳特征聚类群落数 K* = {best_k}")
+	for idx, dist in enumerate(distances_to_ideal):
+	print(f"簇 {idx} 质心距理论极值点(1,1)的空间距离: {dist:.4f}")
+	
+	print("\n锁定距极值点最近的绝对双效优等生群落，最终提纯的关键指标为：")
+	for feat in final_key_features:
+	print(f" -> 【{feat}】 (原始SHAP: {metrics_data[feat]['SHAP']:.4f}, 原始Gain: {metrics_data[feat]['Gain']:.2f})")
+\end{lstlisting}
+
+\begin{lstlisting}[caption={中医体质-XGBoost-SHAP致病贡献度分析}, label={code:tcm_xgb_shap}]
+	import pandas as pd
+	import numpy as np
+	import xgboost as xgb
+	import shap
+	from sklearn.model_selection import train_test_split
+	import matplotlib.pyplot as plt
+	
+	
+	if __name__ == '__main__':
+	# 路径
+	data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	df = pd.read_excel(data_path)
+	
+	# 提取九种中医体质特征作为自变量矩阵 ，高血脂标签作为目标变量
+	features = ['平和质', '气虚质', '阳虚质', '阴虚质', '痰湿质', '湿热质', '血瘀质', '气郁质', '特禀质']
+	target = '高血脂症二分类标签'
+	
+	X = df[features]
+	y = df[target]
+	
+	# 划分训练集与验证集
+	X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+	
+	# 构建 XGBoost 非线性致病空间拟合基座
+	model = xgb.XGBClassifier(
+	learning_rate=0.05,
+	max_depth=4,
+	eval_metric='logloss',
+	random_state=42,
+	early_stopping_rounds=20
+	)
+	
+	# 自适应寻找最优迭代轮数 K
+	model.fit(
+	X_train, y_train,
+	eval_set=[(X_valid, y_valid)],
+	verbose=False
+	)
+	
+	# 引入合作博弈论构造 Shapley 价值函数
+	explainer = shap.TreeExplainer(model)
+	
+	# 求解全体样本的局部边际贡献度矩阵
+	shap_values = explainer.shap_values(X)
+	
+	# 整合计算每种体质的全局绝对贡献度
+	global_importances = np.mean(np.abs(shap_values), axis=0)
+	
+	# 将特征名称与全局贡献度打包并降序排列
+	importance_df = pd.DataFrame({
+		'体质特征': features,
+		'全局绝对贡献度': global_importances
+	}).sort_values(by='全局绝对贡献度', ascending=True)
+	
+	# 逆序输出最强贡献度排名
+	top_down_df = importance_df.sort_values(by='全局绝对贡献度', ascending=False)
+	for rank, (idx, row) in enumerate(top_down_df.iterrows(), 1):
+	print(f"第 {rank} 名: {row['体质特征']} (贡献度: {row['全局绝对贡献度']:.4f})")
+\end{lstlisting}
+
+
+\subsubsection{问题二} 
+
+\begin{lstlisting}[caption={GAM靶向剥离标签泄露高血脂风险预测}, label={code:gam_leakage_stripping}]
+	import os
+	import numpy as np
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	import seaborn as sns
+	from pygam import LogisticGAM, s, f
+	from sklearn.model_selection import train_test_split
+	from sklearn.metrics import log_loss, brier_score_loss
+	
+	if __name__ == '__main__':
+	
+	# 路径
+	FILE_PATH = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	
+	if not os.path.exists(FILE_PATH):
+	print(f"未在路径 {FILE_PATH} 找到数据文件。")
+	exit()
+	
+	df = pd.read_excel(FILE_PATH)
+	y = df['高血脂症二分类标签']
+	
+	# 构建对照组：存在标签泄露的特征矩阵
+	X_leaked = df.drop(columns=['样本ID', '高血脂症二分类标签', '血脂异常分型标签（确诊病例）'], errors='ignore')
+	
+	# 构建实验组：靶向剥离后的特征矩阵
+	leakage_keywords = ['HDL', 'LDL', 'TG', 'TC', '高密度', '低密度', '甘油三酯', '胆固醇']
+	columns_to_strip = [col for col in X_leaked.columns if any(kw in col.upper() for kw in leakage_keywords)]
+	X_stripped = X_leaked.drop(columns=columns_to_strip)
+	
+	
+	# 根据特征唯一值分布，动态构建 B-样条基函数与分类因子
+	def build_gam_terms(X_df):
+	terms = None
+	for i, col in enumerate(X_df.columns):
+	is_categorical = X_df[col].nunique() <= 5
+	current_term = f(i) if is_categorical else s(i)
+	terms = current_term if terms is None else terms + current_term
+	return terms
+	
+	
+	terms_leaked = build_gam_terms(X_leaked)
+	terms_stripped = build_gam_terms(X_stripped)
+	
+	# 划分数据集
+	X_train_s, X_test_s, y_train, y_test = train_test_split(X_stripped, y, test_size=0.3, random_state=42)
+	X_train_l, X_test_l = X_leaked.loc[X_train_s.index], X_leaked.loc[X_test_s.index]
+	
+	# 构建 Logit 联系函数与带粗糙度惩罚的似然目标函数
+	gam_leaked = LogisticGAM(terms_leaked)
+	gam_stripped = LogisticGAM(terms_stripped)
+	
+	# 通过 gridsearch() 执行 PIRLS 迭代，并基于 GCV 准则自适应寻优
+	print("正在通过 GCV 广义交叉验证进行 PIRLS 迭代求解...")
+	gam_leaked.gridsearch(X_train_l.values, y_train.values, progress=False)
+	gam_stripped.gridsearch(X_train_s.values, y_train.values, progress=False)
+	
+	# 输出连续生理发病概率
+	prob_leaked = gam_leaked.predict_mu(X_test_l.values)
+	prob_stripped = gam_stripped.predict_mu(X_test_s.values)
+	
+	print("\n靶向剥离前后的 GAM 模型评估对比")
+	print(f"[泄露组] Brier Score: {brier_score_loss(y_test, prob_leaked):.4f}")
+	print(f"[剥离组] Brier Score: {brier_score_loss(y_test, prob_stripped):.4f}")
+	
+	# 结果输出
+	X_out_s = X_stripped.head(1000)
+	X_out_l = X_leaked.head(1000)
+	y_out = y.head(1000)
+	
+	prob_leaked_1000 = gam_leaked.predict_mu(X_out_l.values)
+	prob_stripped_1000 = gam_stripped.predict_mu(X_out_s.values)
+	
+	output_df = pd.DataFrame({
+		'真实确诊标签': y_out,
+		'泄露版无用概率': prob_leaked_1000,
+		'靶向剥离真实隐性风险概率': prob_stripped_1000
+	}, index=X_out_s.index)
+	
+	# 导出为 Excel 表格
+	output_df.to_excel('GAM_风险概率分层.xlsx')
+\end{lstlisting}
+
+\begin{lstlisting}[caption={GAM隐性风险概率自适应三级分层}, label={code:gam_risk_stratification}]
+	import os
+	import numpy as np
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	from scipy.stats import gaussian_kde
+	from scipy.signal import find_peaks
+	
+	if __name__ == '__main__':
+	
+	# 路径
+	raw_data_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	gam_prob_path = r"C:\Users\jack\Desktop\GAM_风险概率分层.xlsx"
+	
+	if not (os.path.exists(raw_data_path) and os.path.exists(gam_prob_path)):
+	print("未找到指定路径下的数据文件，请检查绝对路径是否正确。")
+	exit()
+	
+	df_raw = pd.read_excel(raw_data_path)
+	df_prob = pd.read_excel(gam_prob_path)
+	
+	# 通过样本ID将连续风险概率与原始多维特征进行横向合并
+	df_merged = pd.merge(df_prob, df_raw[['样本ID', '痰湿质', '活动量表总分（ADL总分+IADL总分）']], on='样本ID',
+	how='inner')
+	
+	# 提取患者的底层隐性风险概率测度
+	p_array = df_merged['靶向剥离真实隐性风险概率'].values
+	
+	# 采用高斯核函数重构概率密度
+	kde = gaussian_kde(p_array, bw_method='silverman')
+	
+	# 在 [0, 1] 区间内均匀生成 N=10000 个高精度连续评估格点
+	p_grid = np.linspace(0, 1, 10000)
+	
+	# 获取连续拓扑密度泛函
+	pdf_values = kde(p_grid)
+	
+	# 对密度曲线求一阶导数等于0且二阶导数大于0，提取极小值
+	valleys, properties = find_peaks(-pdf_values, prominence=0.01)
+	
+	# 提取密度泛函的波峰
+	peaks, _ = find_peaks(pdf_values, prominence=0.01)
+	
+	# 兜底截断策略
+	if len(valleys) < 2:
+	valleys, properties = find_peaks(-pdf_values, prominence=0.001)
+	
+	if len(valleys) >= 2:
+	top_valleys_idx = sorted(valleys[np.argsort(properties['prominences'])[-2:]])
+	th1 = p_grid[top_valleys_idx[0]]
+	th2 = p_grid[top_valleys_idx[1]]
+	else:
+	th1 = np.percentile(p_array, 33.33)
+	th2 = np.percentile(p_array, 66.66)
+	
+	# 构建绝对风险分层判定方程，执行自然分层
+	conditions = [
+	(df_merged['靶向剥离真实隐性风险概率'] <= th1),
+	(df_merged['靶向剥离真实隐性风险概率'] > th1) & (df_merged['靶向剥离真实隐性风险概率'] <= th2),
+	(df_merged['靶向剥离真实隐性风险概率'] > th2)
+	]
+	labels = ['低风险', '中风险', '高风险']
+	numeric_labels = [0, 1, 2]
+	
+	df_merged['风险等级'] = np.select(conditions, labels, default='Unknown')
+	df_merged['风险类别编号'] = np.select(conditions, numeric_labels, default=-1)
+	
+	# 打印结果
+	print(f"微积分极值寻优收敛完成")
+	print(f"自适应判定的低-中风险波谷阈值: {th1:.4f}")
+	print(f"自适应判定的中-高风险波谷阈值: {th2:.4f}")
+	print("\n三级风险人群统计分布：")
+	print(df_merged['风险等级'].value_counts())
+	
+	# 导出表格
+	df_merged.to_excel('三级风险分层结果.xlsx', index=False)
+\end{lstlisting}
+
+\begin{lstlisting}[caption={CART代理决策树+FP-Growth关联规则挖掘}, label={code:cart_fpgrowth}]
+	import os
+	import numpy as np
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	import networkx as nx
+	from sklearn.tree import DecisionTreeClassifier, plot_tree
+	from mlxtend.frequent_patterns import fpgrowth, association_rules
+	
+	if __name__ == '__main__':
+	
+	# 路径
+	risk_labels_path = r"C:\Users\jack\Desktop\三级风险分层结果.xlsx"
+	raw_features_path = r"C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx"
+	
+	if not (os.path.exists(risk_labels_path) and os.path.exists(raw_features_path)):
+	print("致命错误：未找到数据文件，请检查绝对路径。")
+	exit()
+	
+	df_labels = pd.read_excel(risk_labels_path)
+	df_raw = pd.read_excel(raw_features_path)
+	
+	# 特征空间重构与临床逻辑对齐，构建全量空间
+	df_merged = pd.merge(df_labels[['样本ID', '风险等级', '风险类别编号']], df_raw, on='样本ID', how='inner')
+	
+	# 定义全量临床与中医特征池，作为白盒代理模型的自变量
+	feature_cols = [
+	'平和质', '气虚质', '阳虚质', '阴虚质', '痰湿质', '湿热质', '血瘀质', '气郁质', '特禀质',
+	'活动量表总分（ADL总分+IADL总分）', 'HDL-C（高密度脂蛋白）', 'LDL-C（低密度脂蛋白）',
+	'TG（甘油三酯）', 'TC（总胆固醇）', '空腹血糖', '血尿酸', 'BMI'
+	]
+	
+	X_full = df_merged[feature_cols]
+	Y_label = df_merged['风险类别编号']  # 0=Low, 1=Medium, 2=High
+	
+	# 基于 Gini 增益最大化与代价复杂性剪枝构建 CART 代理决策树
+	cart_surrogate = DecisionTreeClassifier(
+	criterion='gini',
+	max_depth=4,
+	min_samples_leaf=0.05,
+	random_state=42
+	)
+	
+	# 拟合全局代理模型
+	cart_surrogate.fit(X_full, Y_label)
+	
+	# 打印全局代理树的分类逼近准确率
+	print(f"CART 代理决策树对高阶拓扑分层标签的保真度: {cart_surrogate.score(X_full, Y_label):.4f}")
+	
+	# 全局三级风险特征阈值白盒转译决策树
+	fig_tree, ax_tree = plt.subplots(figsize=(22, 12), dpi=300)
+	plot_tree(
+	cart_surrogate,
+	feature_names=feature_cols,
+	class_names=['低风险', '中风险', '高风险'],
+	filled=True,
+	rounded=True,
+	fontsize=10,
+	ax=ax_tree
+	)
+	plt.title('基于CART代理机制的全局三级风险临床特征显式判定树', fontsize=18)
+	plt.tight_layout()
+	plt.savefig('CART_Surrogate_Decision_Tree.png', dpi=300)
+	plt.show()
+	
+	# 提取高风险子集，基于 FP-Growth 算法挖掘局部共病关联网络
+	high_risk_subset = df_merged[(df_merged['风险类别编号'] == 2) & (df_merged['痰湿质'] >= 40)].copy()
+	
+	# 执行特征空间的临床分箱离散化转化为项集
+	df_items = pd.DataFrame()
+	df_items['高TG'] = high_risk_subset['TG（甘油三酯）'] >= 1.7
+	df_items['高TC'] = high_risk_subset['TC（总胆固醇）'] >= 6.2
+	df_items['低HDL'] = high_risk_subset['HDL-C（高密度脂蛋白）'] < 1.04
+	df_items['高LDL'] = high_risk_subset['LDL-C（低密度脂蛋白）'] >= 3.1
+	df_items['超重BMI'] = high_risk_subset['BMI'] >= 24
+	df_items['痰湿严重'] = high_risk_subset['痰湿质'] >= 60
+	df_items['低活动量'] = high_risk_subset['活动量表总分（ADL总分+IADL总分）'] < 40
+	
+	# 遍历 FP-Tree 提取满足最小支持度的频繁项集
+	frequent_itemsets = fpgrowth(df_items, min_support=0.15, use_colnames=True)
+	
+	# 基于 Lift 提升度评估准则提取强关联致病规则
+	rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1.2)
+	
+	# 按 Lift 降序提取核心的黄金共病组合规则
+	top_rules = rules.sort_values(by='lift', ascending=False).head(15)
+	
+	print("\n高危人群核心共病特征黄金组合规则前五")
+	print(top_rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']].head(5))
+	
+	# 高危人群核心共病特征关联网络图
+	G = nx.DiGraph()
+	
+	# 提取规则前因后果构建有向网络边与权重
+	for _, row in top_rules.iterrows():
+	ant = ', '.join(list(row['antecedents']))
+	con = ', '.join(list(row['consequents']))
+	G.add_edge(ant, con, weight=row['lift'])
+	
+	fig_net, ax_net = plt.subplots(figsize=(12, 10), dpi=300)
+	pos = nx.spring_layout(G, k=0.8, seed=42)
+	
+	# 计算节点出入度用于映射节点大小
+	node_sizes = [3000 + 1000 * G.degree(node) for node in G.nodes()]
+	
+	# 绘制拓扑网络节点与边
+	nx.draw_networkx_nodes(G, pos, node_color='#fdae61', node_size=node_sizes, alpha=0.9, edgecolors='k')
+	edges = nx.draw_networkx_edges(G, pos, arrowstyle='->', arrowsize=20, edge_color='#d7191c',
+	width=[d['weight'] * 1.5 for (u, v, d) in G.edges(data=True)], alpha=0.7)
+	nx.draw_networkx_labels(G, pos, font_size=11, font_family='SimHei', font_weight='bold')
+	
+	plt.title('基于 FP-Growth 提升度度量的痰湿体质高风险人群共病特征关联拓扑网络', fontsize=16)
+	plt.axis('off')
+	plt.tight_layout()
+	plt.savefig('FP_Growth_Feature_Network.png', dpi=300)
+	plt.show()
+\end{lstlisting}
+
+\subsubsection{问题三} 
+
+\begin{lstlisting}[caption={NSGA-Ⅱ多目标优化痰湿体质干预方案}, label={code:nsga2_tcm_intervention}]
+	import numpy as np
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	from pymoo.core.problem import ElementwiseProblem
+	from pymoo.optimize import minimize
+	from pymoo.algorithms.moo.nsga2 import NSGA2
+	from pymoo.operators.sampling.rnd import IntegerRandomSampling
+	from pymoo.operators.crossover.sbx import SBX
+	from pymoo.operators.mutation.pm import PM
+	from pymoo.operators.repair.rounding import RoundingRepair
+	
+	class TCMInterventionProblem(ElementwiseProblem):
+	def __init__(self, s_0, l_max):
+	self.s_0 = s_0
+	self.l_max = l_max
+	# 决策变量：x1~x6为干预强度，y1~y6为每周频率
+	xl = [1] * 6 + [1] * 6
+	xu = [self.l_max] * 6 + [10] * 6
+	super().__init__(n_var=12, n_obj=2, n_ieq_constr=1, xl=xl, xu=xu)
+	
+	def _evaluate(self, x, out, *args, **kwargs):
+	s_t = self.s_0
+	total_cost = 0.0
+	
+	for t in range(6):
+	x_t = int(round(x[t]))
+	y_t = int(round(x[t + 6]))
+	
+	# C_{TCM}(S_t) = 30 (S_t<=58), 80 (59<=S_t<=61), 130 (S_t>=62)
+	if s_t <= 58:
+	c_tcm = 30
+	elif s_t <= 61:
+	c_tcm = 80
+	else:
+	c_tcm = 130
+	
+	# 建立单次活动成本映射
+	c_unit_map = {1: 3, 2: 5, 3: 8}
+	c_unit = c_unit_map[x_t]
+	
+	# C_{month, t} = C_{TCM}(S_t) + 4 * y_t * C_{unit}(x_t)
+	c_month = c_tcm + 4 * y_t * c_unit
+	total_cost += c_month
+	
+	# r_t = 0 (y_t<5); x_t*3% + (y_t-5)*1% (y_t>=5)
+	if y_t < 5:
+	r_t = 0.0
+	else:
+	r_t = x_t * 0.03 + (y_t - 5) * 0.01
+	
+	# S_{t+1} = S_t * (1 - r_t)
+	s_t = s_t * (1 - r_t)
+	
+	# 0 <= S_t <= 100
+	s_t = max(0.0, min(100.0, s_t))
+	
+	# f_1 = S_7, f_2 = C_{total}
+	out["F"] = [s_t, total_cost]
+	# g_1 = \sum C_{month, t} - 2000 <= 0
+	out["G"] = [total_cost - 2000.0]
+	
+	def get_l_max(age_group, score):
+	# L_{age} 约束逻辑
+	if age_group in [1, 2]:
+	l_age = 3
+	elif age_group in [3, 4]:
+	l_age = 2
+	else:
+	l_age = 1
+	
+	# L_{score} 约束逻辑
+	if score < 40:
+	l_score = 1
+	elif score < 60:
+	l_score = 2
+	else:
+	l_score = 3
+	
+	# L_{max}^{(t)} = \min(L_{age}, L_{score})
+	return min(l_age, l_score)
+	
+	def plot_trajectory(best_x, s_0, patient_id):
+	s_history = [s_0]
+	tcm_costs = []
+	act_costs = []
+	
+	s_t = s_0
+	for t in range(6):
+	x_t = int(round(best_x[t]))
+	y_t = int(round(best_x[t + 6]))
+	
+	# C_{TCM}(S_t) 计算模型重构
+	if s_t <= 58:
+	c_tcm = 30
+	elif s_t <= 61:
+	c_tcm = 80
+	else:
+	c_tcm = 130
+	tcm_costs.append(c_tcm)
+	
+	c_unit_map = {1: 3, 2: 5, 3: 8}
+	c_unit = c_unit_map[x_t]
+	c_act = 4 * y_t * c_unit
+	act_costs.append(c_act)
+	
+	# S_{t+1} = S_t * (1 - r_t)
+	r_t = 0.0 if y_t < 5 else x_t * 0.03 + (y_t - 5) * 0.01
+	s_t = s_t * (1 - r_t)
+	s_history.append(s_t)
+	
+	months = np.arange(1, 7)
+	fig, ax1 = plt.subplots(figsize=(10, 6), dpi=300)
+	
+	ax1.bar(months, tcm_costs, color='#FFA07A', label='中医调理成本', alpha=0.8)
+	ax1.bar(months, act_costs, bottom=tcm_costs, color='#87CEFA', label='活动训练成本', alpha=0.8)
+	ax1.set_xlabel('干预月份')
+	ax1.set_ylabel('单月开销', color='k')
+	ax1.set_ylim(0, 450)
+	
+	ax2 = ax1.twinx()
+	ax2.plot(range(0, 7), s_history, color='red', marker='o', linewidth=2.5, label='痰湿积分状态演化')
+	ax2.set_ylabel('痰湿体质积分', color='red')
+	ax2.axhline(y=62, color='gray', linestyle='-.', alpha=0.5, label='130元档阈值')
+	ax2.axhline(y=59, color='gray', linestyle=':', alpha=0.5, label='80元档阈值')
+	
+	fig.suptitle(f'患者 ID: {patient_id} 动态干预轨迹与成本消耗双轴图')
+	fig.legend(loc='upper center', bbox_to_anchor=(0.5, 0.95), ncol=4)
+	plt.tight_layout(rect=[0, 0.03, 1, 0.9])
+	plt.savefig(f'Patient_{patient_id}_Trajectory.png', dpi=300)
+	plt.close()
+	
+	
+	if __name__ == '__main__':
+	file_path = r'C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx'
+	
+	try:
+	df = pd.read_excel(file_path)
+	except FileNotFoundError:
+	print("未找到Excel文件，请检查绝对路径是否正确。")
+	exit()
+	
+	# 确诊痰湿体质，体质分型标签=5
+	target_ids = [1, 2, 3]
+	
+	# 构建进化算法算子体系
+	algorithm = NSGA2(
+	pop_size=100,
+	sampling=IntegerRandomSampling(),
+	crossover=SBX(prob=0.9, vtype=float, repair=RoundingRepair()),
+	mutation=PM(prob=0.1, vtype=float, repair=RoundingRepair())
+	)
+	
+	for pid in target_ids:
+	patient_data = df[df['样本ID'] == pid]
+	if patient_data.empty:
+	continue
+	
+	row = patient_data.iloc[0]
+	s_0 = float(row.get('痰湿积分', row.get('中医体质分型_积分', 70.0)))
+	age_group = int(row.get('年龄组', 2))
+	score = float(row.get('活动量表总分', 65.0))
+	
+	l_max = get_l_max(age_group, score)
+	
+	problem = TCMInterventionProblem(s_0=s_0, l_max=l_max)
+	
+	res = minimize(problem, algorithm, ('n_gen', 200), seed=42, verbose=False)
+	
+	if res.F is not None:
+	plot_pareto_front(res, pid)
+	
+	# 使用理想点法在 Pareto 解集中选出折中解
+	F_norm = (res.F - res.F.min(axis=0)) / (res.F.max(axis=0) - res.F.min(axis=0) + 1e-8)
+	distances = np.sqrt(np.sum(F_norm ** 2, axis=1))
+	best_idx = np.argmin(distances)
+	
+	best_x = res.X[best_idx]
+	best_f = res.F[best_idx]
+	
+	plot_trajectory(best_x, s_0, pid)
+	
+	print(f"患者 ID: {pid} 最优求解结果:")
+	print(f"初始积分: {s_0:.1f}, 生理耐受度最高强度: {l_max}级")
+	print(f"推荐强度序列: {[int(x) for x in best_x[:6]]}")
+	print(f"推荐频率序列: {[int(x) for x in best_x[6:]]}")
+	print(f"期末痰湿积分: {best_f[0]:.2f}")
+	print(f"六个月总成本: {best_f[1]:.2f} 元\n")
+\end{lstlisting}
+
+\begin{lstlisting}[caption={XGBoost-SHAP干预强度映射归因}, label={code:xgb_shap_nsga2_intervention}]
+	import numpy as np
+	import pandas as pd
+	import matplotlib.pyplot as plt
+	import xgboost as xgb
+	import shap
+	from pymoo.core.problem import ElementwiseProblem
+	from pymoo.optimize import minimize
+	from pymoo.algorithms.moo.nsga2 import NSGA2
+	from pymoo.operators.sampling.rnd import IntegerRandomSampling
+	from pymoo.operators.crossover.sbx import SBX
+	from pymoo.operators.mutation.pm import PM
+	from pymoo.operators.repair.rounding import RoundingRepair
+	
+	# 多目标离散动态优化原理构建干预寻优模型
+	class TCMInterventionProblem(ElementwiseProblem):
+	def __init__(self, s_0, l_max):
+	self.s_0 = s_0
+	self.l_max = l_max
+	xl = [1] * 6 + [1] * 6
+	xu = [self.l_max] * 6 + [10] * 6
+	super().__init__(n_var=12, n_obj=2, n_ieq_constr=1, xl=xl, xu=xu)
+	
+	def _evaluate(self, x, out, *args, **kwargs):
+	s_t = self.s_0
+	total_cost = 0.0
+	
+	for t in range(6):
+	x_t = int(round(x[t]))
+	y_t = int(round(x[t + 6]))
+	
+	if s_t <= 58:
+	c_tcm = 30
+	elif s_t <= 61:
+	c_tcm = 80
+	else:
+	c_tcm = 130
+	
+	c_unit_map = {1: 3, 2: 5, 3: 8}
+	c_unit = c_unit_map[x_t]
+	c_month = c_tcm + 4 * y_t * c_unit
+	total_cost += c_month
+	
+	if y_t < 5:
+	r_t = 0.0
+	else:
+	r_t = x_t * 0.03 + (y_t - 5) * 0.01
+	
+	s_t = s_t * (1 - r_t)
+	s_t = max(0.0, min(100.0, s_t))
+	
+	out["F"] = [s_t, total_cost]
+	out["G"] = [total_cost - 2000.0]
+	
+	
+	def get_l_max(age_group, score):
+	if age_group in [1, 2]:
+	l_age = 3
+	elif age_group in [3, 4]:
+	l_age = 2
+	else:
+	l_age = 1
+	
+	if score < 40:
+	l_score = 1
+	elif score < 60:
+	l_score = 2
+	else:
+	l_score = 3
+	
+	return min(l_age, l_score)
+	
+	
+	if __name__ == '__main__':
+	# 数据
+	file_path = r'C:\Users\jack\Desktop\2026年第十六届MathorCup数学应用挑战赛赛题\C题\附件1：样例数据_异常值处理.xlsx'
+	
+	try:
+	df = pd.read_excel(file_path)
+	except FileNotFoundError:
+	try:
+	df = pd.read_csv(file_path.replace('.xlsx', ' - Sheet1.csv'))
+	except FileNotFoundError:
+	print("未找到数据文件，请检查绝对路径。")
+	exit()
+	
+	df_phlegm = df[df['体质标签'] == 5].copy()
+	
+	features = ['年龄组', '活动量表总分（ADL总分+IADL总分）', '痰湿质']
+	X_data = df_phlegm[features].copy()
+	y_target = []
+	
+	# 构建 NSGA-II 算法实体
+	algorithm = NSGA2(
+	pop_size=50,
+	sampling=IntegerRandomSampling(),
+	crossover=SBX(prob=0.9, vtype=float, repair=RoundingRepair()),
+	mutation=PM(prob=0.1, vtype=float, repair=RoundingRepair())
+	)
+	
+	print(f"正在批量生成 {len(df_phlegm)} 个样本的靶向标签，请耐心等待...")
+	
+	# 遍历附件所有确诊患者数据，生成对应个体的最优干预时序
+	for idx, row in df_phlegm.iterrows():
+	s_0 = float(row['痰湿质'])
+	age_group = int(row['年龄组'])
+	score = float(row['活动量表总分（ADL总分+IADL总分）'])
+	
+	l_max = get_l_max(age_group, score)
+	problem = TCMInterventionProblem(s_0=s_0, l_max=l_max)
+	res = minimize(problem, algorithm, ('n_gen', 100), seed=42, verbose=False)
+	
+	if res.F is not None:
+	# 使用 TOPSIS 思想选择折中解
+	F_norm = (res.F - res.F.min(axis=0)) / (res.F.max(axis=0) - res.F.min(axis=0) + 1e-8)
+	best_idx = np.argmin(np.sqrt(np.sum(F_norm ** 2, axis=1)))
+	best_x = res.X[best_idx]
+	# 提取第一阶段(前两个月)平均干预强度作为回归靶向变量
+	avg_early_intensity = (best_x[0] + best_x[1]) / 2.0
+	y_target.append(avg_early_intensity)
+	else:
+	y_target.append(1.0)
+	
+	X_data['target_y'] = y_target
+	X = X_data[features]
+	y = X_data['target_y']
+	
+	# 基于 XGBoost 构建非线性映射引擎
+	xgb_model = xgb.XGBRegressor(
+	n_estimators=300,
+	learning_rate=0.05,
+	max_depth=4,
+	random_state=42,
+	objective='reg:squarederror'
+	)
+	xgb_model.fit(X, y)
+	
+	# 引入博弈论 SHAP 价值分解框架
+	explainer = shap.TreeExplainer(xgb_model)
+	shap_values = explainer(X)
+	
+	# 全局特征重要性 SHAP 蜂窝图
+	plt.figure(figsize=(10, 6), dpi=300)
+	shap.summary_plot(shap_values, X, show=False)
+	plt.title("特征重要性 SHAP 蜂窝图", pad=20)
+	plt.tight_layout()
+	plt.savefig('SHAP_Summary_Plot.png', dpi=300, bbox_inches='tight')
+	plt.close()
+	
+	# 核心特征的 SHAP 单变量依赖图
+	plt.figure(figsize=(8, 6), dpi=300)
+	shap.dependence_plot("痰湿质", shap_values.values, X, show=False, interaction_index=None)
+	plt.title("初始积分特征 SHAP 依赖图", pad=20)
+	plt.tight_layout()
+	plt.savefig('SHAP_Dependence_Plot.png', dpi=300, bbox_inches='tight')
+	plt.close()
+	
+	print(f"靶向映射与特征归因评估指标输出：")
+	print(f"XGBoost 模型拟合优度): {xgb_model.score(X, y):.4f}")
+	print(
+	f"SHAP 基准值: {explainer.expected_value[0] if isinstance(explainer.expected_value, np.ndarray) else explainer.expected_value:.4f}")
+\end{lstlisting}
+
+\newpage
+
+\subsection{附录2：相关数据}
+\subsubsection{问题一：17项指标贡献度与信息增益值} 
+\begin{center}
+	\captionof{table}{17项关键指标SHAP贡献度与LightGBM信息增益}
+	\label{tab:17features_importance}
+	\begin{tabular}{c l c c}
+		\toprule
+		序号 & 指标名称 & 贡献度 & 信息增益 \\
+		\midrule
+		1  & BMI                  & 1.9042 & 8.21    \\
+		2  & TC（总胆固醇）       & 1.5400 & 1493.76 \\
+		3  & LDL-C（低密度脂蛋白）& 1.4181 & 60.93   \\
+		4  & TG（甘油三酯）       & 1.1943 & 1730.81 \\
+		5  & IADL 理财            & 1.1838 & 3.45    \\
+		6  & HDL-C（高密度脂蛋白）& 1.1712 & 50.81   \\
+		7  & ADL 吃饭             & 1.0911 & 6.38    \\
+		8  & 血尿酸               & 1.0706 & 315.61  \\
+		9  & 空腹血糖             & 0.9891 & 7.51    \\
+		10 & ADL 用厕             & 0.7696 & 2.31    \\
+		11 & IADL 做饭            & 0.7005 & 1.64    \\
+		12 & IADL 交通            & 0.6153 & 0.91    \\
+		13 & ADL 穿衣             & 0.6010 & 3.98    \\
+		14 & IADL 购物            & 0.5683 & 2.49    \\
+		15 & IADL 服药            & 0.5263 & 1.88    \\
+		16 & ADL 洗澡             & 0.5045 & 1.39    \\
+		17 & ADL 步行             & 0.4530 & 2.56    \\
+		\bottomrule
+	\end{tabular}
+\end{center}
+\end{document}
